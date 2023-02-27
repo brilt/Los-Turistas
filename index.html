@@ -1,98 +1,106 @@
 <!DOCTYPE html>
 <html>
-  <head>
-    <meta charset="utf-8">
-    <title>Mon Template Vue.js</title>
-    <style>
-      /* Styles pour la navbar */
-      nav {
-        background-color: #333;
-        color: white;
-        padding: 10px;
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-      }
-      
-      nav a {
-        color: white;
-        text-decoration: none;
-        font-size: 20px;
-        font-weight: bold;
-        margin: 0 10px;
-      }
-      
-      nav a:hover {
-        text-decoration: underline;
-      }
-      
-      /* Styles pour les colonnes */
-      .container {
-        display: flex;
-        flex-wrap: wrap;
-        max-width: 960px;
-        margin: 0 auto;
-        padding: 20px;
-      }
-      
-      .column {
-        flex: 1;
-        margin: 10px;
-        padding: 20px;
-        border: 1px solid #333;
-      }
-      
-      /* Styles pour le footer */
-      footer {
-        background-color: #333;
-        color: white;
-        padding: 10px;
-        text-align: center;
-      }
-    </style>
-  </head>
-  <body>
-    <nav>
-      <a href="#">Ma NavBar</a>
-      <div>
-        <a href="#">Accueil</a>
-        <a href="#">À Propos</a>
-        <a href="#">Contact</a>
+
+<head>
+  <meta charset="utf-8">
+  <title>Mon Template Vue.js</title>
+  <style>
+    /* Styles pour la navbar */
+    nav {
+      background-color: #333;
+      color: white;
+      padding: 10px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    nav a {
+      color: white;
+      text-decoration: none;
+      font-size: 20px;
+      font-weight: bold;
+      margin: 0 10px;
+    }
+
+    nav a:hover {
+      text-decoration: underline;
+    }
+
+    /* Styles pour les colonnes */
+    .container {
+      display: grid;
+      grid-template-columns: 2fr 1fr;
+      /* les deux colonnes prennent respectivement 2/3 et 1/3 de la largeur */
+      grid-gap: 2%;
+      /* espace entre les deux colonnes */
+      flex-wrap: wrap;
+      max-width: 80%;
+      margin: 0 auto;
+      padding: 2%;
+    }
+
+    .column {
+      flex: 1;
+      height: 500px ;
+      margin: 10px;
+      padding: 20px; 
+      border: 1px solid #333;
+    }
+
+    /* Styles pour le footer */
+    footer {
+      background-color: #333;
+      color: white;
+      padding: 10px;
+      text-align: center;
+    }
+  </style>
+</head>
+
+<body>
+  <nav>
+    <a href="#">Ma NavBar</a>
+    <div>
+      <a href="#">Accueil</a>
+      <a href="#">À Propos</a>
+      <a href="#">Contact</a>
+    </div>
+  </nav>
+  <div id="app">
+    <div class="container">
+      <div class="column">
+        <div id="map" style="height: 100%;"></div>
       </div>
-    </nav>
-    <div id="app">
-      <div class="container">
-        <div class="column">
-          <h1>Bienvenue</h1>
-          <div id="map" style="height: 200px;"></div>
-        </div>
-        <div class="column">
-          <h1>Contenu droit</h1>
-          <p>Ici vous pouvez ajouter votre contenu pour la partie droite de la page.</p>
-        </div>
+      <div class="column">
+        <h1>Contenu droit</h1>
+        <p>Ici vous pouvez ajouter votre contenu pour la partie droite de la page.</p>
       </div>
     </div>
-    <footer>
-      <p>Mon footer</p>
-    </footer>
+  </div>
+  <footer>
+    <p>Mon footer</p>
+  </footer>
 
-    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyApRohqBChX1TQQNn8-kulrwVSWtKuQnIc&callback=initMap" async defer></script>
+  <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyApRohqBChX1TQQNn8-kulrwVSWtKuQnIc&callback=initMap"
+    async defer></script>
 
-    <script>
-      function initMap() {
-        // Créer une carte centrée sur un emplacement spécifique
-        const map = new google.maps.Map(document.getElementById("map"), {
-          center: { lat: 48.856614, lng: 2.3522219 }, // Coordonnées de Paris, France
-          zoom: 12,
-        });
+  <script>
+    function initMap() {
+      // Créer une carte centrée sur un emplacement spécifique
+      const map = new google.maps.Map(document.getElementById("map"), {
+        center: { lat: 48.856614, lng: 2.3522219 }, // Coordonnées de Paris, France
+        zoom: 12,
+      });
 
-        // Ajouter un marqueur à l'emplacement de la carte
-        const marker = new google.maps.Marker({
-          position: { lat: 48.856614, lng: 2.3522219 }, // Coordonnées de Paris, France
-          map: map,
-          title: "Paris",
-        });
-      }
-    </script>
-  </body>
+      // Ajouter un marqueur à l'emplacement de la carte
+      const marker = new google.maps.Marker({
+        position: { lat: 48.856614, lng: 2.3522219 }, // Coordonnées de Paris, France
+        map: map,
+        title: "Paris",
+      });
+    }
+  </script>
+</body>
+
 </html>
