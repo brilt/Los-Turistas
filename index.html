@@ -1,23 +1,6 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyApRohqBChX1TQQNn8-kulrwVSWtKuQnIc&callback=initMap" async>
-        function initMap() {
-  // Créer une carte centrée sur un emplacement spécifique
-  const map = new google.maps.Map(document.getElementById("map"), {
-    center: { lat: 48.856614, lng: 2.3522219 }, // Coordonnées de Paris, France
-    zoom: 12,
-  });
-
-  // Ajouter un marqueur à l'emplacement de la carte
-  const marker = new google.maps.Marker({
-    position: { lat: 48.856614, lng: 2.3522219 }, // Coordonnées de Paris, France
-    map: map,
-    title: "Paris",
-  });
-}
-    </script>
-
     <meta charset="utf-8">
     <title>Mon Template Vue.js</title>
     <style>
@@ -92,5 +75,24 @@
     <footer>
       <p>Mon footer</p>
     </footer>
+
+    <script src="https://maps.googleapis.com/maps/api/js?key=YOUR_API_KEY&callback=initMap" async defer></script>
+
+    <script>
+      function initMap() {
+        // Créer une carte centrée sur un emplacement spécifique
+        const map = new google.maps.Map(document.getElementById("map"), {
+          center: { lat: 48.856614, lng: 2.3522219 }, // Coordonnées de Paris, France
+          zoom: 12,
+        });
+
+        // Ajouter un marqueur à l'emplacement de la carte
+        const marker = new google.maps.Marker({
+          position: { lat: 48.856614, lng: 2.3522219 }, // Coordonnées de Paris, France
+          map: map,
+          title: "Paris",
+        });
+      }
+    </script>
   </body>
 </html>
