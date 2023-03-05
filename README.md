@@ -17,3 +17,9 @@ npm run build
 
 ### Customize configuration
 See [Configuration Reference](https://cli.vuejs.org/config/).
+
+
+npm run build
+git add dist -f
+git commit -m "MARKER FONCTIONNEL"
+git subtree push --prefix dist origin gh-pages
