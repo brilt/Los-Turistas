@@ -1,16 +1,51 @@
 <template>
-  <div id="app">
+  <div id="Home2">
     <div class="container">
-      <div class="column">
-        <div id="map" style="height: 100%"></div>
-      </div>
+      <GMapMap :center="center" :zoom="5" class="column">
+        <GMapMarker
+          :key="lugar.id"
+          v-for="lugar in lugares"
+          :position="{ lat: lugar.latitude, lng: lugar.longitude }"
+          :clickable="true"
+          @click="openMarker(lugar.id)"
+        >
+          <GMapInfoWindow
+            :closeclick="true"
+            @closeclick="openMarker(null)"
+            :opened="openedMarkerID === lugar.id"
+          >
+            <h2>{{ lugar.nom }}</h2>
+            <p>
+              {{ lugar.description }}
+            </p>
+          </GMapInfoWindow>
+        </GMapMarker>
+      </GMapMap>
+
       <div class="column">
         <h1>Contenu droit</h1>
+        <select v-model="regionSelected" >
+          <option value="">Tout</option>
+          <option value="Pays de la Loire">Pays de la Loire</option>
+          <option value="Occitanie">Occitanie</option>
+          <option>C</option>
+        </select>
         <div class="list">
-          <article v-for="lugar in lugares" :key="lugar.id" class="card">
+          <article
+            v-for="lugar in shortList()"
+            :key="lugar.id"
+            class="card"
+          >
             <img :src="lugar.image" />
             <div class="description">
-              <h2>{{ lugar.nom }}</h2>
+              <h2>
+                {{ lugar.nom }}
+                <img
+                  @click="toggleFavo"
+                  src="../assets/icons/heart-empty.png"
+                  style="width: 1em"
+                />
+              </h2>
               <p>
                 {{ lugar.description }}
               </p>
@@ -20,6 +55,8 @@
               >
             </div>
           </article>
+          <button @click="pageSuivante">Page suivante</button>
+          <button @click="pagePrecedente">Page Précédente</button>
         </div>
       </div>
     </div>
@@ -38,6 +75,20 @@ export default {
   data() {
     return {
       lugares: [],
+      center: { lat: 46.447898, lng: 2.554401 },
+      markers: [
+        {
+          position: {
+            lat: 51.093048,
+            lng: 6.84212,
+          },
+        },
+      ],
+      indexPage: 0,
+      tailleAffichage: 2,
+      openSpec: false,
+      openedMarkerID: null,
+      regionSelected: "",
     };
   },
   mounted() {
@@ -45,6 +96,47 @@ export default {
       .then((res) => res.json())
       .then((data) => (this.lugares = data))
       .catch((err) => console.log(err.message));
+  },
+  computed: {
+    filterByRegion: function () {
+      
+      let region = this.regionSelected
+      this.resetIndex()
+      return this.lugares.filter(function (lugar) {
+        let filtered = true;
+        if (region && region.length > 0) {
+          filtered = lugar.region == region;
+        }
+        return filtered
+      });
+    },
+  },
+  methods: {
+    shortList() {
+      return this.filterByRegion.slice(
+        this.indexPage,
+        this.indexPage + this.tailleAffichage
+      );
+    },
+    pageSuivante() {
+      if (this.filterByRegion.length / this.indexPage > this.tailleAffichage) {
+        this.indexPage = this.indexPage + this.tailleAffichage;
+      }
+    },
+    pagePrecedente() {
+      if (this.indexPage > 0) {
+        this.indexPage = this.indexPage - this.tailleAffichage;
+      }
+    },
+    resetIndex() {
+      this.indexPage = 0;
+    },
+    toggleFavo() {
+      console.log("Favorited Toggled");
+    },
+    openMarker(id) {
+      this.openedMarkerID = id;
+    },
   },
 };
 </script>

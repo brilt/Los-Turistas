@@ -7,9 +7,10 @@
       <router-link to="/favoritos">Favoritos</router-link>
     </div>
 
-    <button @click="toggleLogIn">Iniciar sesión</button>
+    <button class="login" @click="toggleLogIn">Iniciar sesión</button>
   </nav>
   <LogIn @close="toggleLogIn" v-if="showLogIn" />
+  
   <router-view />
 </template>
 
@@ -37,7 +38,7 @@ export default {
 };
 </script>
 
-<style>
+<style >
 #app {
   font-family: Avenir, Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;

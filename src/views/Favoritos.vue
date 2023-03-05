@@ -1,19 +1,21 @@
-<template>
-  <div class="favoritos">
-    <h1>Pagina favoritos</h1>
-    <Map />
-  </div>
-</template>
+<script setup>
+import {ref} from 'vue'
 
-<script>
-import Map from'../components/Map.vue'
-export default {
-  components: {
-    Map
-  }
-}
+const center = ref({ lat: 51.093048, lng: 6.84212})
+const markers = ref([
+  { position: { lat: 51.093048, lng: 6.84212 }}
+])
 </script>
 
-<style>
+<template>
+<div style="width: 500px; height: 300px">
+<GMapMap :center="center" :zoom="7" style="height: 100%; overflow: visible;"/>
+</div>
+  
+</template>
 
+<style scoped>
+button {
+  font-weight: bold;
+}
 </style>

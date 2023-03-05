@@ -17,7 +17,7 @@
         <div v-if="passwordError" class="error">{{ passwordError }}</div>
 
         <div class="submit">
-          <button>Iniciar sesión</button>
+          <button class="login">Iniciar sesión</button>
         </div>
       </form>
     </div>
@@ -80,7 +80,7 @@ select {
   border-radius: 6px;
   color: #887e7e;
 }
-button {
+.login {
   background: #ff0000;
   border: 0;
   padding: 10px 20px;
