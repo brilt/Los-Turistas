@@ -24,25 +24,25 @@
 
       <div class="column">
         <h1>Contenu droit</h1>
-        <select v-model="regionSelected" >
+        <select v-model="regionSelected">
           <option value="">Tout</option>
           <option value="Pays de la Loire">Pays de la Loire</option>
           <option value="Occitanie">Occitanie</option>
           <option>C</option>
         </select>
         <div class="list">
-          <article
-            v-for="lugar in shortList()"
-            :key="lugar.id"
-            class="card"
-          >
+          <article v-for="lugar in shortList()" :key="lugar.id" class="card">
             <img :src="lugar.image" />
             <div class="description">
               <h2>
                 {{ lugar.nom }}
                 <img
-                  @click="toggleFavo"
-                  src="../assets/icons/heart-empty.png"
+                  @click="toggleFavo(lugar)"
+                  :src="
+                    lugar.fav
+                      ? 'https://cdn-icons-png.flaticon.com/512/833/833472.png '
+                      : 'https://cdn-icons-png.flaticon.com/512/1077/1077035.png '
+                  "
                   style="width: 1em"
                 />
               </h2>
@@ -99,15 +99,14 @@ export default {
   },
   computed: {
     filterByRegion: function () {
-      
-      let region = this.regionSelected
-      this.resetIndex()
+      let region = this.regionSelected;
+      this.resetIndex();
       return this.lugares.filter(function (lugar) {
         let filtered = true;
         if (region && region.length > 0) {
           filtered = lugar.region == region;
         }
-        return filtered
+        return filtered;
       });
     },
   },
@@ -131,8 +130,9 @@ export default {
     resetIndex() {
       this.indexPage = 0;
     },
-    toggleFavo() {
+    toggleFavo(lugar) {
       console.log("Favorited Toggled");
+      lugar.fav = !lugar.fav;
     },
     openMarker(id) {
       this.openedMarkerID = id;
@@ -162,7 +162,7 @@ img {
 /* Styles pour les colonnes */
 .container {
   display: grid;
-  grid-template-columns: 2fr 1fr;
+  grid-template-columns: 1fr 1fr;
   /* les deux colonnes prennent respectivement 2/3 et 1/3 de la largeur */
   grid-gap: 2%;
   /* espace entre les deux colonnes */

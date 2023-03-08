@@ -21,5 +21,5 @@ See [Configuration Reference](https://cli.vuejs.org/config/).
 
 npm run build
 git add dist -f
-git commit -m "Correction fenetre toujours ouverte"
+git commit -m "Please god"
 git subtree push --prefix dist origin gh-pages
