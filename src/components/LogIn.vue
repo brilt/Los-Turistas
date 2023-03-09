@@ -98,6 +98,7 @@ select {
   font-weight: bold;
 }
 .modal {
+  
   width: 400px;
   height: auto;
   padding: 20px;

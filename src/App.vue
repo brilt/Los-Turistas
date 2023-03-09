@@ -8,7 +8,7 @@
 
     <button class="login" @click="toggleLogIn">Iniciar sesión</button>
   </nav>
-  <LogIn @close="toggleLogIn" v-if="showLogIn" />
+  <LogIn @close="toggleLogIn" v-if="showLogIn" style="z-index: 1000;" />
   
   <router-view />
 </template>
