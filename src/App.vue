@@ -3,7 +3,6 @@
     <div class="links">
       <img id="logo" src="./assets/images/los-turistas-logo.png" alt="" />
       <router-link to="/">Página Principal</router-link>
-      <router-link to="/home2">Página Principal2</router-link>
       <router-link to="/favoritos">Favoritos</router-link>
     </div>
 
@@ -16,10 +15,12 @@
 
 <script>
 import LogIn from "./components/LogIn.vue";
+import Post from "./components/Post.vue";
 
 export default {
   components: {
     LogIn,
+    Post,
   },
   data() {
     return {

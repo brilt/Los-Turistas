@@ -1,27 +1,74 @@
 <template>
-  <div class="list">
-    <article v-for="lugar in lugares" :key="lugar.id" class="cta">
-      <img :src="lugar.image" />
-      <div class="cta__text-column">
-        <h2>{{ lugar.nom }}</h2>
-        <p>
-          {{ lugar.description }}
-        </p>
-        <p>
-          Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
-          eiusmod tempor incididunt ut labore et dolore magna aliqua.
-        </p>
-        <a href="https://developer.mozilla.org/en-US/docs/Web/CSS/aspect-ratio"
-          >Read all about it</a
+  <div id="Home2">
+    <div class="container">
+      <GMapMap :center="center" :zoom="5" class="column">
+        <GMapMarker
+          :key="lugar.Id"
+          v-for="lugar in lugares"
+          :position="{ lat: lugar.Latitud, lng: lugar.Longitud }"
+          :clickable="true"
+          @click="openMarker(lugar.Id)"
         >
+          <GMapInfoWindow
+            :closeclick="true"
+            @closeclick="openMarker(null)"
+            :opened="openedMarkerID === lugar.Id"
+          >
+            <h2>{{ lugar.Nombre }}</h2>
+            <p>
+              {{ lugar.Descripción }}
+            </p>
+          </GMapInfoWindow>
+        </GMapMarker>
+      </GMapMap>
+
+      <div class="column">
+        <h1>Contenu droit</h1>
+        <select v-model="regionSelected">
+          <option value="">Tout</option>
+          <option value="Pays de la Loire">Pays de la Loire</option>
+          <option value="Occitanie">Occitanie</option>
+          <option>C</option>
+        </select>
+        <div class="list">
+          <article v-for="lugar in shortList()" :key="lugar.Id" class="card">
+            <img :src="lugar.Imagen" />
+            <div class="description">
+              <h2>
+                {{ lugar.Nombre }}
+                <img
+                  @click="toggleFavo(lugar)"
+                  :src="
+                    lugar.fav
+                      ? 'https://cdn-icons-png.flaticon.com/512/833/833472.png '
+                      : 'https://cdn-icons-png.flaticon.com/512/1077/1077035.png '
+                  "
+                  style="width: 1em"
+                />
+              </h2>
+              <p>
+                {{ lugar.Descripción }}
+              </p>
+              <a
+                href="https://developer.mozilla.org/en-US/docs/Web/CSS/aspect-ratio"
+                >Read all about it</a
+              >
+            </div>
+          </article>
+          <Post></Post>
+          <button @click="pageSuivante">Page suivante</button>
+          <button @click="pagePrecedente">Page Précédente</button>
+        </div>
       </div>
-    </article>
+    </div>
   </div>
 </template>
 
 <script>
 // @ is an alias to /src
 import LogIn from "@/components/LogIn.vue";
+import Post from "@/components/Post.vue";
+
 
 export default {
   name: "Home",
@@ -31,86 +78,117 @@ export default {
   data() {
     return {
       lugares: [],
+      center: { lat: 46.447898, lng: 2.554401 },
+      markers: [
+        {
+          position: {
+            lat: 51.093048,
+            lng: 6.84212,
+          },
+        },
+      ],
+      indexPage: 0,
+      tailleAffichage: 2,
+      openSpec: false,
+      openedMarkerID: null,
+      regionSelected: "",
     };
   },
   mounted() {
-    fetch("http://localhost:3000/lugares")
+    fetch("http://localhost:8000/lugares")
       .then((res) => res.json())
       .then((data) => (this.lugares = data))
       .catch((err) => console.log(err.message));
   },
+  computed: {
+    filterByRegion: function () {
+      let region = this.regionSelected;
+      this.resetIndex();
+      return this.lugares.filter(function (lugar) {
+        let filtered = true;
+        if (region && region.length > 0) {
+          filtered = lugar.Región == region;
+        }
+        return filtered;
+      });
+    },
+  },
+  methods: {
+    shortList() {
+      return this.filterByRegion.slice(
+        this.indexPage,
+        this.indexPage + this.tailleAffichage
+      );
+    },
+    pageSuivante() {
+      if (this.filterByRegion.length / this.indexPage > this.tailleAffichage) {
+        this.indexPage = this.indexPage + this.tailleAffichage;
+      }
+    },
+    pagePrecedente() {
+      if (this.indexPage > 0) {
+        this.indexPage = this.indexPage - this.tailleAffichage;
+      }
+    },
+    resetIndex() {
+      this.indexPage = 0;
+    },
+    toggleFavo(lugar) {
+      console.log("Favorited Toggled");
+      lugar.fav = !lugar.fav;
+      console.log(lugar);
+    },
+    openMarker(id) {
+      this.openedMarkerID = id;
+    },
+  },
 };
 </script>
-
 <style>
-
-.list {
-	font-family: "Open Sans", sans-serif;
-	min-height: 100vh;
-	display: flex;
-	flex-direction: column;
-	gap: 2rem;
-	justify-content: center;
-	align-items: center;
-	background: hsl(187 40% 98%);
-}
-
-
-img {
-  display: block;
-  width: 100%;
-}
-
-h2 {
-  margin: 0;
-  font-size: 1.4rem;
-}
-
-@media (min-width: 50em) {
-  h2 {
-    font-size: 1.8rem;
-  }
-}
-
-.cta {
-  --shadowColor: 187 60% 40%;
-  display: flex;
-  flex-wrap: wrap;
-  flex-direction: row; /* mise à jour de la direction de la flexbox */
-  background: hsl(187 70% 85%);
+.card {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  padding: 20px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
   max-width: 25rem;
+}
+
+.description {
+  flex: 1;
+}
+img {
   width: 100%;
-  box-shadow: 0.65rem 0.65rem 0 hsl(var(--shadowColor) / 1);
-  border-radius: 0.8rem;
-  overflow: hidden;
-  border: 0.5rem solid;
-  align-items: center; /* ajout de l'alignement vertical au centre */
+  height: auto;
+  margin-right: 20px;
 }
 
-.cta img {
-  aspect-ratio: 3 / 2;
-  object-fit: cover;
-  flex: 1 1 300px;
-  outline: 0.5rem solid;
+/* Styles pour les colonnes */
+.container {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  /* les deux colonnes prennent respectivement 2/3 et 1/3 de la largeur */
+  grid-gap: 2%;
+  /* espace entre les deux colonnes */
+  flex-wrap: wrap;
+  max-width: 90%;
+  margin: 0 auto;
+  padding: 2%;
 }
 
-.cta__text-column {
-  padding: min(2rem, 5vw) min(2rem, 5vw) min(2.5rem, 5vw);
-  flex: 1 0 50%;
+.column {
+  flex: 1;
+  height: 500px;
+  margin: 10px;
+  padding: 20px;
+  border: 1px solid #333;
 }
 
-.cta__text-column > * + * {
-  margin: min(1.5rem, 2.5vw) 0 0 0;
-}
-
-.cta a {
-  display: inline-block;
-  color: black;
-  padding: 0.5rem 1rem;
-  text-decoration: none;
-  background: hsl(187 75% 64%);
-  border-radius: 0.6rem;
-  font-weight: 700;
-  border: 0.35rem solid;
+/* Styles pour le footer */
+footer {
+  background-color: #333;
+  color: white;
+  padding: 10px;
+  text-align: center;
 }
 </style>
