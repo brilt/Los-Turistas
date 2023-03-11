@@ -6,10 +6,11 @@
       <router-link to="/favoritos">Favoritos</router-link>
     </div>
 
-    <button class="login" @click="toggleLogIn">Iniciar sesión</button>
+    <button v-if="isLoggedIn" class="login" @click="logOut">Hola {{ username }}, click to logout</button>
+    <button v-else class="login" @click="toggleLogIn">Iniciar sesión</button>
   </nav>
-  <LogIn @close="toggleLogIn" v-if="showLogIn" style="z-index: 1000;" />
-  
+  <LogIn @close="toggleLogIn" v-if="showLogIn" style="z-index: 1000" />
+
   <router-view />
 </template>
 
@@ -17,10 +18,20 @@
 import LogIn from "./components/LogIn.vue";
 import Post from "./components/Post.vue";
 
+import store from './store'
+
 export default {
   components: {
     LogIn,
     Post,
+  },
+  computed: {
+    isLoggedIn() {
+      return store.getters.isLoggedIn;
+    },
+    username() {
+      return store.getters.currentUser.username;
+    }
   },
   data() {
     return {
@@ -35,11 +46,14 @@ export default {
     toggleLogIn() {
       this.showLogIn = !this.showLogIn;
     },
+    logOut() {
+      store.dispatch("logout");
+    },
   },
 };
 </script>
 
-<style >
+<style>
 #app {
   font-family: Avenir, Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
