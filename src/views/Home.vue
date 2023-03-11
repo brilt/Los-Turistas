@@ -98,7 +98,7 @@ export default {
     };
   },
   mounted() {
-    fetch("http://localhost:8000/lugares")
+    fetch("http://localhost:8000/api/lugares")
       .then((res) => res.json())
       .then((data) => (this.lugares = data))
       .catch((err) => console.log(err.message));
