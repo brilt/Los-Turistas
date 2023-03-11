@@ -55,11 +55,12 @@
               >
             </div>
           </article>
-          <Post></Post>
+          
           <button @click="pageSuivante">Page suivante</button>
           <button @click="pagePrecedente">Page Précédente</button>
         </div>
       </div>
+      <Post v-if="admin"></Post>
     </div>
   </div>
 </template>
@@ -68,12 +69,14 @@
 // @ is an alias to /src
 import LogIn from "@/components/LogIn.vue";
 import Post from "@/components/Post.vue";
+import store from "../store"
 
 
 export default {
   name: "Home",
   components: {
     LogIn,
+    Post
   },
   data() {
     return {
@@ -112,6 +115,9 @@ export default {
         return filtered;
       });
     },
+    admin() {
+      return store.getters.currentUser.email==="killianboisseau85@gmail.com";
+    }
   },
   methods: {
     shortList() {
@@ -157,6 +163,7 @@ export default {
 .description {
   flex: 1;
 }
+
 img {
   width: 100%;
   height: auto;

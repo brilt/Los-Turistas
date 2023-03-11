@@ -6,10 +6,12 @@
       <router-link to="/favoritos">Favoritos</router-link>
     </div>
 
-    <button v-if="isLoggedIn" class="login" @click="logOut">Hola {{ username }}, click to logout</button>
+    <button v-if="isLoggedIn" class="login" @click="logOut">Hola amigo, click to logout</button>
     <button v-else class="login" @click="toggleLogIn">Iniciar sesión</button>
   </nav>
-  <LogIn @close="toggleLogIn" v-if="showLogIn" style="z-index: 1000" />
+  <LogIn @close="toggleLogIn" @openSignup="toggleSignup" v-if="showLogIn" style="z-index: 1000" />
+  <SignUp @close="toggleSignup" v-if="showSignup" style="z-index: 1000" />
+
 
   <router-view />
 </template>
@@ -17,6 +19,7 @@
 <script>
 import LogIn from "./components/LogIn.vue";
 import Post from "./components/Post.vue";
+import SignUp from "./components/SignUp.vue";
 
 import store from './store'
 
@@ -24,18 +27,18 @@ export default {
   components: {
     LogIn,
     Post,
+    SignUp,
   },
   computed: {
     isLoggedIn() {
       return store.getters.isLoggedIn;
     },
-    username() {
-      return store.getters.currentUser.username;
-    }
+    
   },
   data() {
     return {
       showLogIn: false,
+      showSignup: false,
     };
   },
   methods: {
@@ -45,6 +48,13 @@ export default {
     },
     toggleLogIn() {
       this.showLogIn = !this.showLogIn;
+    },
+    toggleSignup() {
+      console.log("signup toggled");
+      this.showSignup = !this.showSignup;
+      if (this.showLogIn) {
+        this.showLogIn = !this.showLogIn
+      }
     },
     logOut() {
       store.dispatch("logout");
@@ -69,9 +79,6 @@ nav {
   padding: 0 20px;
 }
 
-button {
-  margin: 30px 0;
-}
 body {
   margin: 0;
 }

@@ -1,8 +1,8 @@
 <template>
   <div class="backdrop" @click.self="closeModal">
     <div class="modal">
-      <img src="../assets/images/login.svg" />
-      <h2>Datos de acceso</h2>
+      <img src="../assets/images/login.svg" width="300" height="100" />
+      <h2>Crear una cuenta</h2>
 
       <form @submit.prevent="handleSubmit">
         <label>Email:</label>
@@ -14,19 +14,19 @@
         />
 
         <label>Password:</label>
-        <input type="password" required v-model="password" />
+        <input type="password" placeholder="Password" required v-model="password" />
+        <label>Repeat password:</label>
+        <input
+          type="password"
+          placeholder="Password (repeat)"
+          v-model="password_repeat"
+        />
         <div v-if="passwordError" class="error">{{ passwordError }}</div>
 
         <div class="submit">
-          <button class="login" @click="login">Iniciar sesión</button>
+          <button class="login" @click="signUp">Crear cuenta</button>
         </div>
       </form>
-      <button
-        style="background-color: transparent; border: 0"
-        @click="openSignup"
-      >
-        ¿No tienes una cuenta?
-      </button>
     </div>
   </div>
 </template>
@@ -35,28 +35,25 @@
 import AuthService from "../services/AuthServices";
 import store from "../store";
 export default {
+  name:"SignUp",
   data() {
     return {
       email: "",
       password: "",
       passwordError: "",
+      password_repeat:""
     };
   },
   methods: {
-    async login() {
+    async signUp() {
       try {
         const credentials = {
           email: this.email,
           password: this.password,
+          password_repeat: this.password_repeat,
         };
-
-        const response = await AuthService.login(credentials);
-        const token = response.token;
-        const user = response.user;
-
-        store.dispatch("login", { token, user });
-
-        this.$router.push("/secret");
+        const response = await AuthService.signUp(credentials);
+        this.passwordError = response.msg;
       } catch (error) {
         this.passwordError = error.response.data.msg;
       }
@@ -64,19 +61,18 @@ export default {
     closeModal() {
       this.$emit("close");
     },
-    openSignup() {
-      this.$emit("openSignup");
-      console.log("Open signup please");
-    },
   },
 };
 </script>
 
 <style>
+/*
 form {
   max-width: 420px;
+  margin: 30px auto;
   background: white;
   text-align: left;
+  padding: 40px;
   border-radius: 10px;
 }
 label {
@@ -102,7 +98,7 @@ select {
   background: #ff0000;
   border: 0;
   padding: 10px 20px;
-  margin: 2em;
+  margin-top: 20px;
   color: white;
   border-radius: 10px;
 }
@@ -116,8 +112,8 @@ select {
   font-weight: bold;
 }
 .modal {
-  width: fit-content;
-  height: fit-content;
+  width: 400px;
+  height: auto;
   padding: 20px;
   padding-bottom: 5%;
   margin: 50px auto;
@@ -126,8 +122,6 @@ select {
   background-position: bottom;
   border-radius: 10px;
   background-image: url("../assets/images/wave.svg");
-  display: flex;
-  flex-direction: column;
 }
 .backdrop {
   top: 0;
@@ -139,5 +133,5 @@ select {
 .modal h1 {
   border: none;
   padding: 0;
-}
+}*/
 </style>
