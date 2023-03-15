@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const url = "https://web-service-380302.uc.r.appspot.com/api/";
+const url = "/api/";
 
 export default {
   login(credentials) {

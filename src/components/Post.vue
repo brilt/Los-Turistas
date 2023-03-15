@@ -48,7 +48,7 @@ export default {
   methods: {
     handleSubmit() {
       axios
-        .post("http://localhost:8000/lugares", {
+        .post("/api/lugares", {
           Nombre: this.Nombre,
           Descripción: this.Descripción,
           Ciudad: this.Ciudad,
