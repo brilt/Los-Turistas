@@ -98,7 +98,7 @@ export default {
     };
   },
   mounted() {
-    fetch("https://web-service-380302.uc.r.appspot.com/api/lugares")
+    fetch("https://los-turistas-ws.onrender.com/api/lugares")
       .then((res) => res.json())
       .then((data) => (this.lugares = data))
       .catch((err) => console.log(err.message));
