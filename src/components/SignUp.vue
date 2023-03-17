@@ -54,6 +54,7 @@ export default {
         };
         const response = await AuthService.signUp(credentials);
         this.passwordError = response.msg;
+        this.closeModal();
       } catch (error) {
         this.passwordError = error.response.data.msg;
       }

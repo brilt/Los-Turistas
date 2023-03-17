@@ -55,7 +55,7 @@ export default {
         const user = response.user;
 
         store.dispatch("login", { token, user });
-
+        this.closeModal();
         this.$router.push("/secret");
       } catch (error) {
         this.passwordError = error.response.data.msg;
