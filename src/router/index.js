@@ -1,7 +1,7 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import Home from '../views/Home.vue'
 import Favoritos from '../views/Favoritos.vue'
-import Secret from "../views/Secret.vue";
+
 
 
 const routes = [
@@ -15,12 +15,7 @@ const routes = [
     path: '/favoritos',
     name: 'favoritos',
     component: Favoritos
-  },
-  {
-    path: "/secret",
-    name: "secret",
-    component: Secret
-  },
+  }
 ]
 
 const router = createRouter({

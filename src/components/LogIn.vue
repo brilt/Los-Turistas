@@ -56,7 +56,6 @@ export default {
 
         store.dispatch("login", { token, user });
 
-        this.$router.push("/secret");
       } catch (error) {
         this.passwordError = error.response.data.msg;
       }
