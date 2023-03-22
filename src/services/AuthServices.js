@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const url = "http://localhost:8000/api/";
+const url = "https://los-turistas-ws.onrender.com/api/";
 
 export default {
   login(credentials) {

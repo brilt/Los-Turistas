@@ -103,7 +103,7 @@ export default {
     this.connectedUser = store.getters.currentUser;
     console.log("CONNECTED USER: " + this.connectedUser);
     try {
-      const response = await fetch("http://localhost:8000/api/lugares");
+      const response = await fetch("https://los-turistas-ws.onrender.com/api/lugares");
       const data = await response.json();
       for (const lugar of data) {
         try {
