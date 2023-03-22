@@ -39,9 +39,9 @@
                 <img
                   @click="toggleFavo(lugar)"
                   :src="
-                    lugar.fav
-                      ? 'https://cdn-icons-png.flaticon.com/512/833/833472.png '
-                      : 'https://cdn-icons-png.flaticon.com/512/1077/1077035.png '
+                    lugar.isFav
+                      ? 'https://cdn-icons-png.flaticon.com/512/833/833472.png'
+                      : 'https://cdn-icons-png.flaticon.com/512/1077/1077035.png'
                   "
                   style="width: 1em"
                 />
@@ -55,9 +55,9 @@
               >
             </div>
           </article>
-          
-          <button @click="pageSuivante">Page suivante</button>
+
           <button @click="pagePrecedente">Page Précédente</button>
+          <button @click="pageSuivante">Page suivante</button>
         </div>
       </div>
       <Post v-if="admin"></Post>
@@ -69,14 +69,14 @@
 // @ is an alias to /src
 import LogIn from "@/components/LogIn.vue";
 import Post from "@/components/Post.vue";
-import store from "../store"
-
+import FavServices from "@/services/FavServices";
+import store from "../store";
 
 export default {
   name: "Home",
   components: {
     LogIn,
-    Post
+    Post,
   },
   data() {
     return {
@@ -95,14 +95,52 @@ export default {
       openSpec: false,
       openedMarkerID: null,
       regionSelected: "",
+      connectedUser: "",
+      currentFav: false,
     };
   },
-  mounted() {
-    fetch("https://los-turistas-ws.onrender.com/api/lugares")
-      .then((res) => res.json())
-      .then((data) => (this.lugares = data))
-      .catch((err) => console.log(err.message));
+  async created() {
+    this.connectedUser = store.getters.currentUser;
+    console.log("CONNECTED USER: " + this.connectedUser);
+    try {
+      const response = await fetch("http://localhost:8000/api/lugares");
+      const data = await response.json();
+      for (const lugar of data) {
+        try {
+          if (typeof this.connectedUser.id === "undefined") {
+            console.log("No user connected.");
+            const checklink = {
+              IdUsuario: "",
+              IdLugar: lugar.Id,
+            };
+            lugar.isFav = false;
+            console.log("PAS FAVORI");
+            console.log(lugar.isFav);
+          } else {
+            const checklink = {
+              IdUsuario: this.connectedUser.id,
+              IdLugar: lugar.Id,
+            };
+            const response = await FavServices.checkFav(checklink);
+            if (response.favorito) {
+              console.log("FAVORI");
+              lugar.isFav = true;
+              console.log(lugar.isFav);
+            } else {
+              console.log("PAS FAVORI");
+              lugar.isFav = false;
+            }
+          }
+        } catch (error) {
+          console.log("Error checking fav: " + error);
+        }
+      }
+      this.lugares = data;
+    } catch (err) {
+      console.log(err.message);
+    }
   },
+
   computed: {
     filterByRegion: function () {
       let region = this.regionSelected;
@@ -116,10 +154,31 @@ export default {
       });
     },
     admin() {
-      return store.getters.currentUser.email==="killianboisseau85@gmail.com";
-    }
+      return this.connectedUser.email === "killianboisseau85@gmail.com";
+    },
   },
   methods: {
+    checkFavorito(lugar) {
+      try {
+        const checklink = {
+          IdUsuario: this.connectedUser.id,
+          IdLugar: lugar.Id,
+        };
+        if (typeof this.connectedUser.id === "undefined") {
+        } else {
+          const response = FavServices.checkFav(checklink);
+          if (response.favorito) {
+            console.log("FAVORI");
+            return true;
+          } else {
+            console.log("PAS FAVORI");
+            return false;
+          }
+        }
+      } catch (error) {
+        console.log("Error checking fav: " + error);
+      }
+    },
     shortList() {
       return this.filterByRegion.slice(
         this.indexPage,
@@ -139,10 +198,24 @@ export default {
     resetIndex() {
       this.indexPage = 0;
     },
-    toggleFavo(lugar) {
-      console.log("Favorited Toggled");
-      lugar.fav = !lugar.fav;
-      console.log(lugar);
+    async toggleFavo(lugar) {
+      try {
+        const link = {
+          IdUsuario: this.connectedUser.id,
+          IdLugar: lugar.Id,
+        };
+        console.log("CLICKED");
+
+        if (typeof this.connectedUser.id === "undefined") {
+        } else {
+          const response = await FavServices.toggleFav(link);
+
+          console.log("is fav ? " + response.isFav);
+          lugar.isFav = response.isFav;
+        }
+      } catch (error) {
+        console.log("Error adding fav: " + error);
+      }
     },
     openMarker(id) {
       this.openedMarkerID = id;

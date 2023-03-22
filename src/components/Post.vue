@@ -48,7 +48,7 @@ export default {
   methods: {
     handleSubmit() {
       axios
-        .post("https://los-turistas-ws.onrender.com/api/lugares", {
+        .post("http://localhost:8000/api/lugares", {
           Nombre: this.Nombre,
           Descripción: this.Descripción,
           Ciudad: this.Ciudad,

@@ -56,13 +56,16 @@ export default {
 
         store.dispatch("login", { token, user });
         this.closeModal();
-        this.$router.push("/secret");
+        
       } catch (error) {
         this.passwordError = error.response.data.msg;
       }
+      
     },
     closeModal() {
       this.$emit("close");
+      console.log("reloading")
+      window.location.reload();
     },
     openSignup() {
       this.$emit("openSignup");

@@ -58,6 +58,8 @@ export default {
     },
     logOut() {
       store.dispatch("logout");
+      console.log("reloading")
+      window.location.reload();
     },
   },
 };
