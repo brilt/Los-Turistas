@@ -73,8 +73,8 @@ export default {
 
 <style>
 form {
-  max-width: 420px;
-  background: white;
+  max-width: 500px;
+  background: rgba(0,0,0,0);
   text-align: left;
   border-radius: 10px;
 }
@@ -119,7 +119,7 @@ select {
   height: fit-content;
   padding: 20px;
   padding-bottom: 5%;
-  margin: 50px auto;
+  margin: 10px auto;
   background: white;
   background-repeat: no-repeat;
   background-position: bottom;

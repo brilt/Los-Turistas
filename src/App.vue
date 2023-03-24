@@ -10,7 +10,7 @@
     <button v-else class="login" @click="toggleLogIn">Iniciar sesión</button>
   </nav>
   <LogIn @close="toggleLogIn" @openSignup="toggleSignup" v-if="showLogIn" style="z-index: 1000" />
-  <SignUp @close="toggleSignup" v-if="showSignup" style="z-index: 1000" />
+  <SignUp @close="toggleSignup" @openLogIn="toggleLogIn" v-if="showSignup" style="z-index: 1000" />
 
 
   <router-view />
@@ -47,7 +47,11 @@ export default {
       this.$refs.name.focus();
     },
     toggleLogIn() {
+      console.log("LogIn toggled");
       this.showLogIn = !this.showLogIn;
+      if (this.showSignup) {
+        this.showSignup = !this.showSignup
+      }
     },
     toggleSignup() {
       console.log("signup toggled");

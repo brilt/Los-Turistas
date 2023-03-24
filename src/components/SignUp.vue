@@ -27,6 +27,12 @@
           <button class="login" @click="signUp">Crear cuenta</button>
         </div>
       </form>
+      <button
+        style="background-color: transparent; border: 0"
+        @click="openLogIn"
+      >
+        ¿Tienes una cuenta?
+      </button>
     </div>
   </div>
 </template>
@@ -60,6 +66,10 @@ export default {
     },
     closeModal() {
       this.$emit("close");
+    },
+    openLogIn() {
+      this.$emit("openLogIn");
+      console.log("Open LogIn please");
     },
   },
 };
