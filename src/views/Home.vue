@@ -36,7 +36,7 @@
         </select>
         <div class="list">
           <article v-for="lugar in shortList()" :key="lugar.Id" class="card">
-            <img :src="lugar.Imagen" />
+            <img :src="lugar.Imagen" style="height: 10rem; width: auto;"/>
             <div class="description">
               <h2>
                 {{ lugar.Nombre }}
@@ -245,11 +245,18 @@ export default {
 .card {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  padding: 20px;
+  padding: 10px;
+  margin: 5px;
   border: 1px solid #ccc;
   border-radius: 5px;
-  max-width: 25rem;
+  max-width: 100%;
 }
+.card-container {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: stretch;
+}
+
 
 .description {
   flex: 1;
@@ -270,13 +277,13 @@ img {
   /* espace entre les deux colonnes */
   flex-wrap: wrap;
   max-width: 90%;
-  margin: 0 auto;
+  margin: auto;
   padding: 2%;
 }
 
 .column {
   flex: 1;
-  height: 500px;
+  height: auto;
   margin: 10px;
   padding: 20px;
   border: 1px solid #333;

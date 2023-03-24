@@ -3,6 +3,7 @@ import Home from '../views/Home.vue'
 import Favoritos from '../views/Favoritos.vue'
 
 
+
 const routes = [
   
   {
@@ -14,6 +15,7 @@ const routes = [
     path: '/favoritos',
     name: 'favoritos',
     component: Favoritos
+  },
   }
 ]
 
