@@ -4,7 +4,7 @@
       <GMapMap :center="center" :zoom="5" class="column">
         <GMapMarker
           :key="lugar.Id"
-          v-for="lugar in lugares"
+          v-for="lugar in filterByRegion"
           :position="{ lat: lugar.Latitud, lng: lugar.Longitud }"
           :clickable="true"
           @click="openMarker(lugar.Id)"
@@ -26,9 +26,13 @@
         <h1>Contenu droit</h1>
         <select v-model="regionSelected">
           <option value="">Tout</option>
-          <option value="Pays de la Loire">Pays de la Loire</option>
-          <option value="Occitanie">Occitanie</option>
-          <option>C</option>
+          <option
+            v-for="region in uniqueRegion"
+            :key="region"
+            :value="region"
+          >
+            {{ region }}
+          </option>
         </select>
         <div class="list">
           <article v-for="lugar in shortList()" :key="lugar.Id" class="card">
@@ -97,13 +101,16 @@ export default {
       regionSelected: "",
       connectedUser: "",
       currentFav: false,
+      region: [],
     };
   },
   async created() {
     this.connectedUser = store.getters.currentUser;
     console.log("CONNECTED USER: " + this.connectedUser);
     try {
-      const response = await fetch("https://los-turistas-ws.onrender.com/api/lugares");
+      const response = await fetch(
+        "https://los-turistas-ws.onrender.com/api/lugares"
+      );
       const data = await response.json();
       for (const lugar of data) {
         try {
@@ -131,6 +138,7 @@ export default {
               lugar.isFav = false;
             }
           }
+          this.region.push(lugar.Región);
         } catch (error) {
           console.log("Error checking fav: " + error);
         }
@@ -155,6 +163,15 @@ export default {
     },
     admin() {
       return this.connectedUser.email === "killianboisseau85@gmail.com";
+    },
+    uniqueRegion() {
+      let elementsUniques = [];
+      for (let i = 0; i < this.region.length; i++) {
+        if (elementsUniques.indexOf(this.region[i]) === -1) {
+          elementsUniques.push(this.region[i]);
+        }
+      }
+      return elementsUniques;
     },
   },
   methods: {
@@ -189,6 +206,7 @@ export default {
       if (this.filterByRegion.length / this.indexPage > this.tailleAffichage) {
         this.indexPage = this.indexPage + this.tailleAffichage;
       }
+      console.log(this.uniqueRegion);
     },
     pagePrecedente() {
       if (this.indexPage > 0) {
