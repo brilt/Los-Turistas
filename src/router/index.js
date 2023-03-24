@@ -16,7 +16,7 @@ const routes = [
     name: 'favoritos',
     component: Favoritos
   },
-  }
+  
 ]
 
 const router = createRouter({

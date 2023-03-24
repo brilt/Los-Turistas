@@ -14,7 +14,7 @@
         />
 
         <label>Password:</label>
-        <input type="password" required v-model="password" />
+        <input type="password" required v-model="password" placeholder="Password" />
         <div v-if="passwordError" class="error">{{ passwordError }}</div>
 
         <div class="submit">
