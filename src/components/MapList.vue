@@ -199,10 +199,22 @@ export default {
       }
     },
     shortList() {
-      return this.filterByRegion.slice(
-        this.indexPage,
-        this.indexPage + this.tailleAffichage
-      );
+      console.log(this.openedMarkerID)
+      let id = this.openedMarkerID
+      if (this.openedMarkerID == null) {
+        return this.filterByRegion.slice(
+          this.indexPage,
+          this.indexPage + this.tailleAffichage
+        );
+      } else {
+        return this.lugares.filter(function (lugar) {
+          let filtered = true;
+          console.log(id)
+          filtered = lugar.Id == id;
+          
+          return filtered;
+        });
+      }
     },
     pageSuivante() {
       if (this.filterByRegion.length / this.indexPage > this.tailleAffichage) {
@@ -237,6 +249,7 @@ export default {
     },
     openMarker(id) {
       this.openedMarkerID = id;
+      console.log(this.openedMarkerID)
     },
   },
 };
