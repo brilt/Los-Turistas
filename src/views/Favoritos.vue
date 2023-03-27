@@ -1,21 +1,29 @@
-<script setup>
-import {ref} from 'vue'
-
-const center = ref({ lat: 51.093048, lng: 6.84212})
-const markers = ref([
-  { position: { lat: 51.093048, lng: 6.84212 }}
-])
-</script>
-
 <template>
-<div style="width: 500px; height: 300px">
-<GMapMap :center="center" :zoom="7" style="height: 100%; overflow: visible;"/>
-</div>
-  
+  <div id="Favoritos">
+    <MapList displayFavorite="true"></MapList>
+  </div>
 </template>
 
-<style scoped>
-button {
-  font-weight: bold;
-}
+<script>
+// @ is an alias to /src
+import LogIn from "@/components/LogIn.vue";
+import MapList from "@/components/MapList.vue";
+
+
+export default {
+  name: "Home",
+  data() {
+    return {
+      displayFavorite: true
+    }
+  },
+  components: {
+    LogIn,
+    MapList
+  },
+};
+</script>
+<style>
+
+
 </style>

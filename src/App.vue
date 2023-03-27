@@ -6,12 +6,23 @@
       <router-link to="/favoritos">Favoritos</router-link>
     </div>
 
-    <button v-if="isLoggedIn" class="login" @click="logOut">Hola amigo, click to logout</button>
+    <button v-if="isLoggedIn" class="login" @click="logOut">
+      Hola amigo, click to logout
+    </button>
     <button v-else class="login" @click="toggleLogIn">Iniciar sesión</button>
   </nav>
-  <LogIn @close="toggleLogIn" @openSignup="toggleSignup" v-if="showLogIn" style="z-index: 1000" />
-  <SignUp @close="toggleSignup" @openLogIn="toggleLogIn" v-if="showSignup" style="z-index: 1000" />
-
+  <LogIn
+    @close="toggleLogIn"
+    @openSignup="toggleSignup"
+    v-if="showLogIn"
+    style="z-index: 1000"
+  />
+  <SignUp
+    @close="toggleSignup"
+    @openLogIn="toggleLogIn"
+    v-if="showSignup"
+    style="z-index: 1000"
+  />
 
   <router-view />
 </template>
@@ -21,7 +32,7 @@ import LogIn from "./components/LogIn.vue";
 import Post from "./components/Post.vue";
 import SignUp from "./components/SignUp.vue";
 
-import store from './store'
+import store from "./store";
 
 export default {
   components: {
@@ -33,7 +44,6 @@ export default {
     isLoggedIn() {
       return store.getters.isLoggedIn;
     },
-    
   },
   data() {
     return {
@@ -50,19 +60,19 @@ export default {
       console.log("LogIn toggled");
       this.showLogIn = !this.showLogIn;
       if (this.showSignup) {
-        this.showSignup = !this.showSignup
+        this.showSignup = !this.showSignup;
       }
     },
     toggleSignup() {
       console.log("signup toggled");
       this.showSignup = !this.showSignup;
       if (this.showLogIn) {
-        this.showLogIn = !this.showLogIn
+        this.showLogIn = !this.showLogIn;
       }
     },
     logOut() {
       store.dispatch("logout");
-      console.log("reloading")
+      console.log("reloading");
       window.location.reload();
     },
   },
@@ -108,5 +118,11 @@ nav a.router-link-exact-active {
   align-items: center;
   display: flex;
   justify-content: space-around;
+}
+footer {
+  background-color: #333;
+  color: white;
+  padding: 10px;
+  text-align: center;
 }
 </style>
