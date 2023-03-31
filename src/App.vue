@@ -134,11 +134,5 @@ nav a.router-link-exact-active {
   display: flex;
   justify-content: center;
   align-items: center;
-
-.footer {
-  background-color: #333;
-  color: white;
-  padding: 10px;
-  text-align: center;
 }
 </style>

@@ -7,10 +7,11 @@
       :options="{
         disableDefaultUi: true,
       }"
+      style="border: 1px solid black"
     >
       <GMapMarker
         :key="lugar.Id"
-        v-for="lugar in filterByRegion"
+        v-for="lugar in filterList"
         :position="{ lat: lugar.Latitud, lng: lugar.Longitud }"
         :clickable="true"
         @click="openMarker(lugar.Id)"
@@ -30,11 +31,12 @@
 
     <div class="column">
       <h1>Contenu droit</h1>
-      <select v-model="regionSelected">
+      <select v-model="filter">
         <option value="">Tout</option>
         <option v-for="region in uniqueRegion" :key="region" :value="region">
           {{ region }}
         </option>
+        <option value="fav">Order by number favorites</option>
       </select>
       <div class="list">
         <article v-for="lugar in shortList()" :key="lugar.Id" class="card">
@@ -94,14 +96,15 @@ export default {
         },
       ],
       indexPage: 0,
-      tailleAffichage: 2,
+      tailleAffichage: 3,
       openSpec: false,
       openedMarkerID: null,
-      regionSelected: "",
+      filter: "",
       connectedUser: "",
       currentFav: false,
       favList: [],
       region: [],
+      favCount: [],
     };
   },
   async created() {
@@ -137,6 +140,25 @@ export default {
           console.log("Error checking fav: " + error);
         }
       }
+      console.log(data);
+
+      const favCountResponse = await fetch(
+        "https://los-turistas-ws.onrender.com/api/orderFav"
+      )
+        .then((response) => response.json())
+        .then((dt) => {
+          data.forEach((element) => {
+            const matchingElement = dt.find((e) => e.IdLugar === element.Id);
+            if (matchingElement) {
+              // If a matching element is found in list2, update the properties in list1
+              Object.assign(element, matchingElement);
+            } else {
+              element.count = 0;
+            }
+          });
+        });
+
+      console.log(data);
       this.lugares = data;
     } catch (err) {
       console.log(err.message);
@@ -144,25 +166,38 @@ export default {
   },
 
   computed: {
-    filterByRegion: function () {
-      let region = this.regionSelected;
+    filterList: function () {
+      let region = this.filter;
       this.resetIndex();
       if (this.displayFavorite) {
         return this.favList.filter(function (lugar) {
           let filtered = true;
           if (region && region.length > 0) {
-            filtered = lugar.Región == region;
+            filtered = lugar.Región === region;
           }
           return filtered;
         });
       } else {
-        return this.lugares.filter(function (lugar) {
+        let filteredList = this.lugares.filter(function (lugar) {
           let filtered = true;
           if (region && region.length > 0) {
-            filtered = lugar.Región == region;
+            if (region !== "fav") {
+              filtered = lugar.Región === region;
+            } else {
+              filtered = true; // no filtering by "fav" region
+            }
           }
           return filtered;
         });
+
+        // sorting by the "count" parameter if no region is specified
+        if (region == "fav") {
+          filteredList.sort(function (a, b) {
+            return b.count - a.count;
+          });
+        }
+
+        return filteredList;
       }
     },
     admin() {
@@ -199,35 +234,42 @@ export default {
       }
     },
     shortList() {
-      console.log(this.openedMarkerID)
-      let id = this.openedMarkerID
+      let id = this.openedMarkerID;
       if (this.openedMarkerID == null) {
-        return this.filterByRegion.slice(
-          this.indexPage,
-          this.indexPage + this.tailleAffichage
+        return this.filterList.slice(
+          this.indexPage-1,
+          this.indexPage + this.tailleAffichage-1
         );
       } else {
         return this.lugares.filter(function (lugar) {
           let filtered = true;
-          console.log(id)
+          console.log(id);
           filtered = lugar.Id == id;
-          
+
           return filtered;
         });
       }
     },
     pageSuivante() {
-      if (this.filterByRegion.length / this.indexPage > this.tailleAffichage) {
+      console.log(
+        "this.filterList.length / this.indexPage: " +
+          this.filterList.length / this.indexPage
+      );
+      console.log(" this.tailleAffichage: " + this.tailleAffichage);
+      if (
+        this.filterList.length / this.indexPage > this.tailleAffichage &&
+        this.filterList.length / this.indexPage >= 1
+      ) {
         this.indexPage = this.indexPage + this.tailleAffichage;
       }
     },
     pagePrecedente() {
-      if (this.indexPage > 0) {
+      if (this.indexPage >= 1) {
         this.indexPage = this.indexPage - this.tailleAffichage;
       }
     },
     resetIndex() {
-      this.indexPage = 0;
+      this.indexPage = 1;
     },
     async toggleFavo(lugar) {
       try {
@@ -249,64 +291,8 @@ export default {
     },
     openMarker(id) {
       this.openedMarkerID = id;
-      console.log(this.openedMarkerID)
+      console.log(this.openedMarkerID);
     },
   },
 };
 </script>
-
-<style scoped>
-.card {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  padding: 10px;
-  margin: 5px;
-  border: 1px solid #ccc;
-  border-radius: 5px;
-  max-width: 100%;
-}
-.card-container {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: stretch;
-}
-
-.description {
-  flex: 1;
-}
-
-img {
-  width: 100%;
-  height: auto;
-  margin-right: 20px;
-}
-
-/* Styles pour les colonnes */
-.container {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  /* les deux colonnes prennent respectivement 2/3 et 1/3 de la largeur */
-  grid-gap: 2%;
-  /* espace entre les deux colonnes */
-  flex-wrap: wrap;
-  max-width: 90%;
-  margin: auto;
-  padding: 2%;
-}
-
-.column {
-  flex: 1;
-  height: auto;
-  margin: 10px;
-  padding: 20px;
-  border: 1px solid #333;
-}
-
-/* Styles pour le footer */
-footer {
-  background-color: #333;
-  color: white;
-  padding: 10px;
-  text-align: center;
-}
-</style>
