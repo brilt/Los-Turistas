@@ -14,7 +14,12 @@
         />
 
         <label>Password:</label>
-        <input type="password" placeholder="Password" required v-model="password" />
+        <input
+          type="password"
+          placeholder="Password"
+          required
+          v-model="password"
+        />
         <label>Repeat password:</label>
         <input
           type="password"
@@ -41,13 +46,13 @@
 import AuthService from "../services/AuthServices";
 import store from "../store";
 export default {
-  name:"SignUp",
+  name: "SignUp",
   data() {
     return {
       email: "",
       password: "",
       passwordError: "",
-      password_repeat:""
+      password_repeat: "",
     };
   },
   methods: {
@@ -60,12 +65,15 @@ export default {
         };
         const response = await AuthService.signUp(credentials);
         this.passwordError = response.msg;
+        this.closeModal();
       } catch (error) {
         this.passwordError = error.response.data.msg;
       }
     },
     closeModal() {
       this.$emit("close");
+      console.log("reloading")
+      window.location.reload();
     },
     openLogIn() {
       this.$emit("openLogIn");
