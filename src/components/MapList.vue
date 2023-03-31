@@ -7,6 +7,7 @@
       :options="{
         disableDefaultUi: true,
       }"
+      style="border: 1px solid black"
     >
       <GMapMarker
         :key="lugar.Id"
@@ -42,9 +43,7 @@
           <img :src="lugar.Imagen" style="height: 10rem; width: auto" />
           <div class="description">
             <h2>
-              {{ lugar.Nombre }}
-
-              <h3>{{ lugar.count }}</h3>
+              {{ lugar.Nombre }}  
               <img
                 @click="toggleFavo(lugar)"
                 :src="
@@ -97,7 +96,7 @@ export default {
         },
       ],
       indexPage: 0,
-      tailleAffichage: 2,
+      tailleAffichage: 3,
       openSpec: false,
       openedMarkerID: null,
       filter: "",
@@ -290,58 +289,3 @@ export default {
 };
 </script>
 
-<style scoped>
-.card {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  padding: 10px;
-  margin: 5px;
-  border: 1px solid #ccc;
-  border-radius: 5px;
-  max-width: 100%;
-}
-.card-container {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: stretch;
-}
-
-.description {
-  flex: 1;
-}
-
-img {
-  width: 100%;
-  height: auto;
-  margin-right: 20px;
-}
-
-/* Styles pour les colonnes */
-.container {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  /* les deux colonnes prennent respectivement 2/3 et 1/3 de la largeur */
-  grid-gap: 2%;
-  /* espace entre les deux colonnes */
-  flex-wrap: wrap;
-  max-width: 90%;
-  margin: auto;
-  padding: 2%;
-}
-
-.column {
-  flex: 1;
-  height: auto;
-  margin: 10px;
-  padding: 20px;
-  border: 1px solid #333;
-}
-
-/* Styles pour le footer */
-footer {
-  background-color: #333;
-  color: white;
-  padding: 10px;
-  text-align: center;
-}
-</style>
