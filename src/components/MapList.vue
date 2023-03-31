@@ -43,7 +43,7 @@
           <img :src="lugar.Imagen" style="height: 10rem; width: auto" />
           <div class="description">
             <h2>
-              {{ lugar.Nombre }}  
+              {{ lugar.Nombre }}
               <img
                 @click="toggleFavo(lugar)"
                 :src="
@@ -237,8 +237,8 @@ export default {
       let id = this.openedMarkerID;
       if (this.openedMarkerID == null) {
         return this.filterList.slice(
-          this.indexPage,
-          this.indexPage + this.tailleAffichage
+          this.indexPage-1,
+          this.indexPage + this.tailleAffichage-1
         );
       } else {
         return this.lugares.filter(function (lugar) {
@@ -251,17 +251,25 @@ export default {
       }
     },
     pageSuivante() {
-      if (this.filterList.length / this.indexPage > this.tailleAffichage) {
+      console.log(
+        "this.filterList.length / this.indexPage: " +
+          this.filterList.length / this.indexPage
+      );
+      console.log(" this.tailleAffichage: " + this.tailleAffichage);
+      if (
+        this.filterList.length / this.indexPage > this.tailleAffichage &&
+        this.filterList.length / this.indexPage >= 1
+      ) {
         this.indexPage = this.indexPage + this.tailleAffichage;
       }
     },
     pagePrecedente() {
-      if (this.indexPage > 0) {
+      if (this.indexPage >= 1) {
         this.indexPage = this.indexPage - this.tailleAffichage;
       }
     },
     resetIndex() {
-      this.indexPage = 0;
+      this.indexPage = 1;
     },
     async toggleFavo(lugar) {
       try {
@@ -288,4 +296,3 @@ export default {
   },
 };
 </script>
-
