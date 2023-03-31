@@ -2,8 +2,12 @@
   <nav>
     <div class="links">
       <img id="logo" src="./assets/images/los-turistas-logo.png" alt="" />
-      <router-link to="/">Página Principal</router-link>
-      <router-link to="/favoritos">Favoritos</router-link>
+      <div class="link">
+        <router-link to="/">Página Principal</router-link>
+      </div>
+      <div class="link">
+        <router-link to="/favoritos">Favoritos</router-link>
+      </div>
     </div>
 
     <button v-if="isLoggedIn" class="login" @click="logOut">Hola amigo, click to logout</button>
@@ -88,9 +92,12 @@ body {
 }
 
 nav a {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
   font-weight: bold;
   color: white;
-  vertical-align: center;
   text-decoration: none;
 }
 
@@ -99,12 +106,21 @@ nav a.router-link-exact-active {
 }
 
 #logo {
-  width: 30%;
-  padding: 10px 0;
+  width: 15%;
+
 }
+
 .links {
   align-items: center;
   display: flex;
   justify-content: space-around;
+}
+
+.link {
+  height: 50px;
+  width: 50px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 </style>

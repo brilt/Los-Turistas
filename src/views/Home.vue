@@ -1,7 +1,7 @@
 <template>
   <div id="Home2">
     <div class="container">
-      <GMapMap :center="center" :zoom="5" class="column">
+      <GMapMap :center="center" :zoom="5" class="column" style="height: 600px; border: 1px solid black">
         <GMapMarker
           :key="lugar.Id"
           v-for="lugar in lugares"
@@ -23,16 +23,15 @@
       </GMapMap>
 
       <div class="column">
-        <h1>Contenu droit</h1>
         <select v-model="regionSelected">
           <option value="">Tout</option>
           <option value="Pays de la Loire">Pays de la Loire</option>
           <option value="Occitanie">Occitanie</option>
           <option>C</option>
         </select>
-        <div class="list">
+        <div>
           <article v-for="lugar in shortList()" :key="lugar.Id" class="card">
-            <img :src="lugar.Imagen" style="height: 10rem; width: auto;"/>
+            <img :src="lugar.Imagen" style="height: 10rem; width: auto; max-width: 200px;"/>
             <div class="description">
               <h2>
                 {{ lugar.Nombre }}
@@ -91,7 +90,7 @@ export default {
         },
       ],
       indexPage: 0,
-      tailleAffichage: 2,
+      tailleAffichage: 3,
       openSpec: false,
       openedMarkerID: null,
       regionSelected: "",
@@ -153,8 +152,8 @@ export default {
 <style>
 .card {
   display: grid;
-  grid-template-columns: 1fr 1fr;
-  padding: 10px;
+  grid-template-columns: 1fr 2fr;
+  padding: 0px;
   margin: 5px;
   border: 1px solid #ccc;
   border-radius: 5px;
@@ -174,28 +173,25 @@ export default {
 img {
   width: 100%;
   height: auto;
-  margin-right: 20px;
 }
 
 /* Styles pour les colonnes */
 .container {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  /* les deux colonnes prennent respectivement 2/3 et 1/3 de la largeur */
   grid-gap: 2%;
-  /* espace entre les deux colonnes */
   flex-wrap: wrap;
   max-width: 90%;
   margin: auto;
-  padding: 2%;
-}
+  padding: 1%;
+} 
 
 .column {
   flex: 1;
   height: auto;
-  margin: 10px;
-  padding: 20px;
-  border: 1px solid #333;
+  margin: 5px;
+  padding: 10px;
+
 }
 
 /* Styles pour le footer */
