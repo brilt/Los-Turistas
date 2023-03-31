@@ -21,5 +21,5 @@ See [Configuration Reference](https://cli.vuejs.org/config/).
 
 npm run build
 git add dist -f
-git commit -m "factorized map and list"
+git commit -m "filter by clicking"
 git subtree push --prefix dist origin gh-pages

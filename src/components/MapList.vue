@@ -10,7 +10,7 @@
     >
       <GMapMarker
         :key="lugar.Id"
-        v-for="lugar in filterByRegion"
+        v-for="lugar in filterList"
         :position="{ lat: lugar.Latitud, lng: lugar.Longitud }"
         :clickable="true"
         @click="openMarker(lugar.Id)"
@@ -30,11 +30,12 @@
 
     <div class="column">
       <h1>Contenu droit</h1>
-      <select v-model="regionSelected">
+      <select v-model="filter">
         <option value="">Tout</option>
         <option v-for="region in uniqueRegion" :key="region" :value="region">
           {{ region }}
         </option>
+        <option value="fav">Order by number favorites</option>
       </select>
       <div class="list">
         <article v-for="lugar in shortList()" :key="lugar.Id" class="card">
@@ -42,6 +43,8 @@
           <div class="description">
             <h2>
               {{ lugar.Nombre }}
+
+              <h3>{{ lugar.count }}</h3>
               <img
                 @click="toggleFavo(lugar)"
                 :src="
@@ -97,11 +100,12 @@ export default {
       tailleAffichage: 2,
       openSpec: false,
       openedMarkerID: null,
-      regionSelected: "",
+      filter: "",
       connectedUser: "",
       currentFav: false,
       favList: [],
       region: [],
+      favCount: [],
     };
   },
   async created() {
@@ -137,6 +141,25 @@ export default {
           console.log("Error checking fav: " + error);
         }
       }
+      console.log(data);
+
+      const favCountResponse = await fetch(
+        "https://los-turistas-ws.onrender.com/api/orderFav"
+      )
+        .then((response) => response.json())
+        .then((dt) => {
+          data.forEach((element) => {
+            const matchingElement = dt.find((e) => e.IdLugar === element.Id);
+            if (matchingElement) {
+              // If a matching element is found in list2, update the properties in list1
+              Object.assign(element, matchingElement);
+            } else {
+              element.count = 0;
+            }
+          });
+        });
+
+      console.log(data);
       this.lugares = data;
     } catch (err) {
       console.log(err.message);
@@ -144,25 +167,38 @@ export default {
   },
 
   computed: {
-    filterByRegion: function () {
-      let region = this.regionSelected;
+    filterList: function () {
+      let region = this.filter;
       this.resetIndex();
       if (this.displayFavorite) {
         return this.favList.filter(function (lugar) {
           let filtered = true;
           if (region && region.length > 0) {
-            filtered = lugar.Región == region;
+            filtered = lugar.Región === region;
           }
           return filtered;
         });
       } else {
-        return this.lugares.filter(function (lugar) {
+        let filteredList = this.lugares.filter(function (lugar) {
           let filtered = true;
           if (region && region.length > 0) {
-            filtered = lugar.Región == region;
+            if (region !== "fav") {
+              filtered = lugar.Región === region;
+            } else {
+              filtered = true; // no filtering by "fav" region
+            }
           }
           return filtered;
         });
+
+        // sorting by the "count" parameter if no region is specified
+        if (region == "fav") {
+          filteredList.sort(function (a, b) {
+            return b.count - a.count;
+          });
+        }
+
+        return filteredList;
       }
     },
     admin() {
@@ -199,25 +235,24 @@ export default {
       }
     },
     shortList() {
-      console.log(this.openedMarkerID)
-      let id = this.openedMarkerID
+      let id = this.openedMarkerID;
       if (this.openedMarkerID == null) {
-        return this.filterByRegion.slice(
+        return this.filterList.slice(
           this.indexPage,
           this.indexPage + this.tailleAffichage
         );
       } else {
         return this.lugares.filter(function (lugar) {
           let filtered = true;
-          console.log(id)
+          console.log(id);
           filtered = lugar.Id == id;
-          
+
           return filtered;
         });
       }
     },
     pageSuivante() {
-      if (this.filterByRegion.length / this.indexPage > this.tailleAffichage) {
+      if (this.filterList.length / this.indexPage > this.tailleAffichage) {
         this.indexPage = this.indexPage + this.tailleAffichage;
       }
     },
@@ -249,7 +284,7 @@ export default {
     },
     openMarker(id) {
       this.openedMarkerID = id;
-      console.log(this.openedMarkerID)
+      console.log(this.openedMarkerID);
     },
   },
 };

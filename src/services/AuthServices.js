@@ -24,14 +24,4 @@ export default {
         throw error; // Renvoie l'erreur pour la traiter à l'endroit où elle est appelée
       });
   },
-  getSecretContent() {
-    return axios
-      .get(url + "secret-route/")
-      .then((response) => response.data)
-      .catch((error) => {
-        // Gérer l'erreur ici
-        console.log(error);
-        throw error; // Renvoie l'erreur pour la traiter à l'endroit où elle est appelée
-      });
-  },
 };
