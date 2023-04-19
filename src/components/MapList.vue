@@ -11,20 +11,21 @@
       style="border: 1px solid black"
     >
       <GMapMarker
-        :key="lugar.Id"
-        v-for="lugar in filterList"
-        :position="{ lat: lugar.Latitud, lng: lugar.Longitud }"
+        
+        v-for="place in filterList"
+        :key="place.Id"
+        :position="{ lat: place.Latitude, lng: place.Longitud }"
         :clickable="true"
-        @click="openMarker(lugar.Id)"
+        @click="openMarker(place.Id)"
       >
         <GMapInfoWindow
           :closeclick="true"
           @closeclick="openMarker(null)"
-          :opened="openedMarkerID === lugar.Id"
+          :opened="openedMarkerID === place.Id"
         >
-          <h2>{{ lugar.Nombre }}</h2>
+          <h2>{{ place.Name }}</h2>
           <p>
-            {{ lugar.Descripción }}
+            {{ place.Description }}
           </p>
         </GMapInfoWindow>
       </GMapMarker>
@@ -40,33 +41,33 @@
         <option value="fav">Order by number favorites</option>
       </select>
       <div class="list">
-        <article v-for="lugar in shortList()" :key="lugar.Id" class="card">
-          <img :src="lugar.Imagen" style="height: 10rem; width: auto" />
+        <article v-for="place in shortList()" :key="place.Id" class="card">
+          <img :src="place.Image" style="height: 10rem; width: auto" />
           <div class="description">
             <h2>
-              {{ lugar.Nombre }}
+              {{ place.Name }}
               <picture>
                 <img
-                  @click="toggleFavo(lugar)"
+                  @click="toggleFavo(place)"
                   :src="
-                    lugar.isFav
+                    place.isFav
                       ? 'https://cdn-icons-png.flaticon.com/512/833/833472.png'
                       : 'https://cdn-icons-png.flaticon.com/512/1077/1077035.png'
                   "
                   style="width: 1em; vertical-align: middle"
                 />
-                <p style="display:inline; font-size: 0.7em;">({{ lugar.count }})</p>
+                <p style="display:inline; font-size: 0.7em;">({{ place.count }})</p>
               </picture>
             </h2>
             <p>
-              {{ lugar.Descripción }}
+              {{ place.Description }}
             </p>
-            <a :href="lugar.Enlace" target="_blank">Read all about it</a>
+            <a :href="place.Link" target="_blank">Read all about it</a>
           </div>
         </article>
 
-        <button @click="pagePrecedente">Page Précédente</button>
-        <button @click="pageSuivante">Page suivante</button>
+        <button @click="previousPage">Previous page</button>
+        <button @click="nextPage">Next page</button>
       </div>
     </div>
   </div>
@@ -86,7 +87,7 @@ export default {
   },
   data() {
     return {
-      lugares: [],
+      places: [],
       center: { lat: 46.447898, lng: 2.554401 },
       markers: [
         {
@@ -97,7 +98,7 @@ export default {
         },
       ],
       indexPage: 0,
-      tailleAffichage: 3,
+      displaySize: 3,
       openSpec: false,
       openedMarkerID: null,
       filter: "",
@@ -112,31 +113,31 @@ export default {
     this.connectedUser = store.getters.currentUser;
     try {
       const response = await fetch(
-        "https://los-turistas-ws.onrender.com/api/lugares"
+        "https://los-turistas-ws.onrender.com/api/places"
       );
       const data = await response.json();
-      for (const lugar of data) {
+      for (const place of data) {
         try {
           if (typeof this.connectedUser.id === "undefined") {
             const checklink = {
-              IdUsuario: "",
-              IdLugar: lugar.Id,
+              userId: "",
+              placeId: place.Id,
             };
-            lugar.isFav = false;
+            place.isFav = false;
           } else {
             const checklink = {
-              IdUsuario: this.connectedUser.id,
-              IdLugar: lugar.Id,
+              userId: this.connectedUser.id,
+              placeId: place.Id,
             };
             const response = await FavServices.checkFav(checklink);
-            if (response.favorito) {
-              lugar.isFav = true;
-              this.favList.push(lugar);
+            if (response.favorite) {
+              place.isFav = true;
+              this.favList.push(place);
             } else {
-              lugar.isFav = false;
+              place.isFav = false;
             }
           }
-          this.region.push(lugar.Región);
+          this.region.push(place.Region);
         } catch (error) {
           console.log("Error checking fav: " + error);
         }
@@ -149,7 +150,7 @@ export default {
         .then((response) => response.json())
         .then((dt) => {
           data.forEach((element) => {
-            const matchingElement = dt.find((e) => e.IdLugar === element.Id);
+            const matchingElement = dt.find((e) => e.placeId === element.Id);
             if (matchingElement) {
               // If a matching element is found in list2, update the properties in list1
               Object.assign(element, matchingElement);
@@ -159,8 +160,7 @@ export default {
           });
         });
 
-      console.log(data);
-      this.lugares = data;
+      this.places = data;
     } catch (err) {
       console.log(err.message);
     }
@@ -171,19 +171,19 @@ export default {
       let region = this.filter;
       this.resetIndex();
       if (this.displayFavorite) {
-        return this.favList.filter(function (lugar) {
+        return this.favList.filter(function (place) {
           let filtered = true;
           if (region && region.length > 0) {
-            filtered = lugar.Región === region;
+            filtered = place.Region === region;
           }
           return filtered;
         });
       } else {
-        let filteredList = this.lugares.filter(function (lugar) {
+        let filteredList = this.places.filter(function (place) {
           let filtered = true;
           if (region && region.length > 0) {
             if (region !== "fav") {
-              filtered = lugar.Región === region;
+              filtered = place.Region === region;
             } else {
               filtered = true; // no filtering by "fav" region
             }
@@ -205,26 +205,26 @@ export default {
       return this.connectedUser.email === "killianboisseau85@gmail.com";
     },
     uniqueRegion() {
-      let elementsUniques = [];
+      let uniqueElements = [];
       for (let i = 0; i < this.region.length; i++) {
-        if (elementsUniques.indexOf(this.region[i]) === -1) {
-          elementsUniques.push(this.region[i]);
+        if (uniqueElements.indexOf(this.region[i]) === -1) {
+          uniqueElements.push(this.region[i]);
         }
       }
-      return elementsUniques;
+      return uniqueElements;
     },
   },
   methods: {
-    checkFavorito(lugar) {
+    checkfavorite(place) {
       try {
         const checklink = {
-          IdUsuario: this.connectedUser.id,
-          IdLugar: lugar.Id,
+          userId: this.connectedUser.id,
+          placeId: place.Id,
         };
         if (typeof this.connectedUser.id === "undefined") {
         } else {
           const response = FavServices.checkFav(checklink);
-          if (response.favorito) {
+          if (response.favorite) {
             return true;
           } else {
             return false;
@@ -239,44 +239,44 @@ export default {
       if (this.openedMarkerID == null) {
         return this.filterList.slice(
           this.indexPage - 1,
-          this.indexPage + this.tailleAffichage - 1
+          this.indexPage + this.displaySize - 1
         );
       } else {
-        return this.lugares.filter(function (lugar) {
+        return this.places.filter(function (place) {
           let filtered = true;
           console.log(id);
-          filtered = lugar.Id == id;
+          filtered = place.Id == id;
 
           return filtered;
         });
       }
     },
-    pageSuivante() {
+    nextPage() {
       console.log(
         "this.filterList.length / this.indexPage: " +
           this.filterList.length / this.indexPage
       );
-      console.log(" this.tailleAffichage: " + this.tailleAffichage);
+      console.log(" this.displaySize: " + this.displaySize);
       if (
-        this.filterList.length / this.indexPage > this.tailleAffichage &&
+        this.filterList.length / this.indexPage > this.displaySize &&
         this.filterList.length / this.indexPage >= 1
       ) {
-        this.indexPage = this.indexPage + this.tailleAffichage;
+        this.indexPage = this.indexPage + this.displaySize;
       }
     },
-    pagePrecedente() {
+    previousPage() {
       if (this.indexPage > 1) {
-        this.indexPage = this.indexPage - this.tailleAffichage;
+        this.indexPage = this.indexPage - this.displaySize;
       }
     },
     resetIndex() {
       this.indexPage = 1;
     },
-    async toggleFavo(lugar) {
+    async toggleFavo(place) {
       try {
         const link = {
-          IdUsuario: this.connectedUser.id,
-          IdLugar: lugar.Id,
+          userId: this.connectedUser.id,
+          placeId: place.Id,
         };
 
         if (typeof this.connectedUser.id === "undefined") {
@@ -284,11 +284,11 @@ export default {
         } else {
           const response = await FavServices.toggleFav(link);
 
-          lugar.isFav = response.isFav;
-          if (lugar.isFav) {
-            lugar.count ++
+          place.isFav = response.isFav;
+          if (place.isFav) {
+            place.count ++
           } else {
-            lugar.count --
+            place.count --
           }
         }
       } catch (error) {

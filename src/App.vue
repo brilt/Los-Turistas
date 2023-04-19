@@ -3,17 +3,17 @@
     <div class="links">
       <img id="logo" src="./assets/images/los-turistas-logo.png" alt="" />
       <div class="link">
-        <router-link to="/">Página Principal</router-link>
+        <router-link to="/">Home</router-link>
       </div>
       <div class="link">
-        <router-link to="/favoritos">Favoritos</router-link>
+        <router-link to="/favorites">Favorites</router-link>
       </div>
     </div>
 
     <button v-if="isLoggedIn" class="login" @click="logOut">
-      Hola amigo, click to logout
+      Hi mi friend, click to logout
     </button>
-    <button v-else class="login" @click="toggleLogIn">Iniciar sesión</button>
+    <button v-else class="login" @click="toggleLogIn">Login</button>
   </nav>
   <LogIn
     @close="toggleLogIn"
