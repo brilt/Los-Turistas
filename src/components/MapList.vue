@@ -1,27 +1,12 @@
 <template>
   <div class="container">
-    <GMapMap
-      :center="center"
-      :zoom="5"
-      class="column"
-      :options="{
-        disableDefaultUi: true,
-        streetViewControl: false
-      }"
-      style="border: 1px solid black"
-    >
-      <GMapMarker
-        :key="lugar.Id"
-        v-for="lugar in filterList"
-        :position="{ lat: lugar.Latitud, lng: lugar.Longitud }"
-        :clickable="true"
-        @click="openMarker(lugar.Id)"
-      >
-        <GMapInfoWindow
-          :closeclick="true"
-          @closeclick="openMarker(null)"
-          :opened="openedMarkerID === lugar.Id"
-        >
+    <GMapMap :center="center" :zoom="5" class="column" :options="{
+      disableDefaultUi: true,
+      streetViewControl: false
+    }" style="border: 1px solid black">
+      <GMapMarker v-for="lugar in filterList" :position="{ lat: lugar.Latitud, lng: lugar.Longitud }" :key="lugar.Id"
+        :clickable="true" @click="openMarker(lugar.Id)">
+        <GMapInfoWindow :closeclick="true" @closeclick="openMarker(null)" :opened="openedMarkerID === lugar.Id">
           <h2>{{ lugar.Nombre }}</h2>
           <p>
             {{ lugar.Descripción }}
@@ -40,27 +25,19 @@
       </select>
       <div class="list">
         <article v-for="lugar in shortList()" :key="lugar.Id" class="card">
-          <img @click="toggleFavo(lugar)" :src="
-            lugar.isFav
-              ? 'https://cdn-icons-png.flaticon.com/512/833/833472.png'
-              : 'https://cdn-icons-png.flaticon.com/512/1077/1077035.png'
-          " style="width: 1.5em; position: absolute; top: 0; right: 0; margin: 15px;" />
+          <picture style="position: absolute; top: 0; right: 0; margin: 15px;">
+                <img @click="toggleFavo(lugar)" :src="
+                  lugar.isFav
+                    ? 'https://cdn-icons-png.flaticon.com/512/833/833472.png'
+                    : 'https://cdn-icons-png.flaticon.com/512/1077/1077035.png'
+                " style="width: 1.5em; " />
+                <p style="display:inline; font-size: 1em;">({{ lugar.count }})</p>
+              </picture>
           <img :src="lugar.Imagen" style="height: 10rem; width: auto" />
           <div class="description">
             <h2>
               {{ lugar.Nombre }}
-              <picture>
-                <img
-                  @click="toggleFavo(lugar)"
-                  :src="
-                    lugar.isFav
-                      ? 'https://cdn-icons-png.flaticon.com/512/833/833472.png'
-                      : 'https://cdn-icons-png.flaticon.com/512/1077/1077035.png'
-                  "
-                  style="width: 1em; vertical-align: middle"
-                />
-                <p style="display:inline; font-size: 0.7em;">({{ lugar.count }})</p>
-              </picture>
+              
             </h2>
             <p>
               {{ lugar.Descripción }}
@@ -290,9 +267,9 @@ export default {
 
           lugar.isFav = response.isFav;
           if (lugar.isFav) {
-            lugar.count ++
+            lugar.count++
           } else {
-            lugar.count --
+            lugar.count--
           }
         }
       } catch (error) {
@@ -306,3 +283,49 @@ export default {
   },
 };
 </script>
+<style>
+.card {
+  display: grid;
+  grid-template-columns: 1fr 2fr;
+  padding: 0px;
+  margin: 5px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  max-width: 100%;
+  position:relative;
+}
+.card-container {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: stretch;
+}
+
+
+.description {
+  flex: 1;
+}
+
+img {
+  width: 100%;
+  height: auto;
+}
+
+/* Styles pour les colonnes */
+.container {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  grid-gap: 2%;
+  flex-wrap: wrap;
+  max-width: 90%;
+  margin: auto;
+  padding: 1%;
+} 
+
+.column {
+  flex: 1;
+  height: auto;
+  margin: 5px;
+  padding: 10px;
+
+}
+</style>
