@@ -1,11 +1,27 @@
 <template>
   <div class="container">
-    <GMapMap :center="center" :zoom="5" class="column" :options="{
-      disableDefaultUi: true,
-    }" style="border: 1px solid black">
-      <GMapMarker :key="lugar.Id" v-for="lugar in filterList" :position="{ lat: lugar.Latitud, lng: lugar.Longitud }"
-        :clickable="true" @click="openMarker(lugar.Id)">
-        <GMapInfoWindow :closeclick="true" @closeclick="openMarker(null)" :opened="openedMarkerID === lugar.Id">
+    <GMapMap
+      :center="center"
+      :zoom="5"
+      class="column"
+      :options="{
+        disableDefaultUi: true,
+        streetViewControl: false
+      }"
+      style="border: 1px solid black"
+    >
+      <GMapMarker
+        :key="lugar.Id"
+        v-for="lugar in filterList"
+        :position="{ lat: lugar.Latitud, lng: lugar.Longitud }"
+        :clickable="true"
+        @click="openMarker(lugar.Id)"
+      >
+        <GMapInfoWindow
+          :closeclick="true"
+          @closeclick="openMarker(null)"
+          :opened="openedMarkerID === lugar.Id"
+        >
           <h2>{{ lugar.Nombre }}</h2>
           <p>
             {{ lugar.Descripción }}
@@ -33,12 +49,23 @@
           <div class="description">
             <h2>
               {{ lugar.Nombre }}
-
+              <picture>
+                <img
+                  @click="toggleFavo(lugar)"
+                  :src="
+                    lugar.isFav
+                      ? 'https://cdn-icons-png.flaticon.com/512/833/833472.png'
+                      : 'https://cdn-icons-png.flaticon.com/512/1077/1077035.png'
+                  "
+                  style="width: 1em; vertical-align: middle"
+                />
+                <p style="display:inline; font-size: 0.7em;">({{ lugar.count }})</p>
+              </picture>
             </h2>
             <p>
               {{ lugar.Descripción }}
             </p>
-            <a href="https://developer.mozilla.org/en-US/docs/Web/CSS/aspect-ratio">Read all about it</a>
+            <a :href="lugar.Enlace" target="_blank">Read all about it</a>
           </div>
         </article>
 
@@ -242,7 +269,7 @@ export default {
       }
     },
     pagePrecedente() {
-      if (this.indexPage >= 1) {
+      if (this.indexPage > 1) {
         this.indexPage = this.indexPage - this.tailleAffichage;
       }
     },
@@ -262,6 +289,11 @@ export default {
           const response = await FavServices.toggleFav(link);
 
           lugar.isFav = response.isFav;
+          if (lugar.isFav) {
+            lugar.count ++
+          } else {
+            lugar.count --
+          }
         }
       } catch (error) {
         console.log("Error adding fav: " + error);
