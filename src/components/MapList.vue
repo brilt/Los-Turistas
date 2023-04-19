@@ -1,26 +1,11 @@
 <template>
   <div class="container">
-    <GMapMap
-      :center="center"
-      :zoom="5"
-      class="column"
-      :options="{
-        disableDefaultUi: true,
-      }"
-      style="border: 1px solid black"
-    >
-      <GMapMarker
-        :key="lugar.Id"
-        v-for="lugar in filterList"
-        :position="{ lat: lugar.Latitud, lng: lugar.Longitud }"
-        :clickable="true"
-        @click="openMarker(lugar.Id)"
-      >
-        <GMapInfoWindow
-          :closeclick="true"
-          @closeclick="openMarker(null)"
-          :opened="openedMarkerID === lugar.Id"
-        >
+    <GMapMap :center="center" :zoom="5" class="column" :options="{
+      disableDefaultUi: true,
+    }" style="border: 1px solid black">
+      <GMapMarker :key="lugar.Id" v-for="lugar in filterList" :position="{ lat: lugar.Latitud, lng: lugar.Longitud }"
+        :clickable="true" @click="openMarker(lugar.Id)">
+        <GMapInfoWindow :closeclick="true" @closeclick="openMarker(null)" :opened="openedMarkerID === lugar.Id">
           <h2>{{ lugar.Nombre }}</h2>
           <p>
             {{ lugar.Descripción }}
@@ -30,7 +15,6 @@
     </GMapMap>
 
     <div class="column">
-      <h1>Contenu droit</h1>
       <select v-model="filter">
         <option value="">Tout</option>
         <option v-for="region in uniqueRegion" :key="region" :value="region">
@@ -40,27 +24,21 @@
       </select>
       <div class="list">
         <article v-for="lugar in shortList()" :key="lugar.Id" class="card">
+          <img @click="toggleFavo(lugar)" :src="
+            lugar.isFav
+              ? 'https://cdn-icons-png.flaticon.com/512/833/833472.png'
+              : 'https://cdn-icons-png.flaticon.com/512/1077/1077035.png'
+          " style="width: 1.5em; position: absolute; top: 0; right: 0; margin: 15px;" />
           <img :src="lugar.Imagen" style="height: 10rem; width: auto" />
           <div class="description">
             <h2>
               {{ lugar.Nombre }}
-              <img
-                @click="toggleFavo(lugar)"
-                :src="
-                  lugar.isFav
-                    ? 'https://cdn-icons-png.flaticon.com/512/833/833472.png'
-                    : 'https://cdn-icons-png.flaticon.com/512/1077/1077035.png'
-                "
-                style="width: 1em"
-              />
+
             </h2>
             <p>
               {{ lugar.Descripción }}
             </p>
-            <a
-              href="https://developer.mozilla.org/en-US/docs/Web/CSS/aspect-ratio"
-              >Read all about it</a
-            >
+            <a href="https://developer.mozilla.org/en-US/docs/Web/CSS/aspect-ratio">Read all about it</a>
           </div>
         </article>
 
@@ -237,8 +215,8 @@ export default {
       let id = this.openedMarkerID;
       if (this.openedMarkerID == null) {
         return this.filterList.slice(
-          this.indexPage-1,
-          this.indexPage + this.tailleAffichage-1
+          this.indexPage - 1,
+          this.indexPage + this.tailleAffichage - 1
         );
       } else {
         return this.lugares.filter(function (lugar) {
@@ -253,7 +231,7 @@ export default {
     pageSuivante() {
       console.log(
         "this.filterList.length / this.indexPage: " +
-          this.filterList.length / this.indexPage
+        this.filterList.length / this.indexPage
       );
       console.log(" this.tailleAffichage: " + this.tailleAffichage);
       if (

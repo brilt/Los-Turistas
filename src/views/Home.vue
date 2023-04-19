@@ -35,6 +35,7 @@ export default {
   border: 1px solid #ccc;
   border-radius: 5px;
   max-width: 100%;
+  position:relative;
 }
 .card-container {
   display: flex;
