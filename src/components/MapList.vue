@@ -41,22 +41,18 @@
       </select>
       <div class="list">
         <article v-for="place in shortList()" :key="place.Id" class="card">
+          <picture style="position: absolute; top: 0; right: 0; margin: 15px;">
+                <img @click="toggleFavo(place)" :src="
+                  place.isFav
+                    ? 'https://cdn-icons-png.flaticon.com/512/833/833472.png'
+                    : 'https://cdn-icons-png.flaticon.com/512/1077/1077035.png'
+                " style="width: 1.5em; " />
+                <p style="display:inline; font-size: 1em;">({{ place.count }})</p>
+              </picture>
           <img :src="place.Image" style="height: 10rem; width: auto" />
           <div class="description">
             <h2>
               {{ place.Name }}
-              <picture>
-                <img
-                  @click="toggleFavo(place)"
-                  :src="
-                    place.isFav
-                      ? 'https://cdn-icons-png.flaticon.com/512/833/833472.png'
-                      : 'https://cdn-icons-png.flaticon.com/512/1077/1077035.png'
-                  "
-                  style="width: 1em; vertical-align: middle"
-                />
-                <p style="display:inline; font-size: 0.7em;">({{ place.count }})</p>
-              </picture>
             </h2>
             <p>
               {{ place.Description }}
