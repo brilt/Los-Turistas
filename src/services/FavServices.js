@@ -17,11 +17,11 @@ export default {
   },
   checkFav(checklink) {
     return axios
-      .post(url + "checkFavoritos/", checklink)
+      .post(url + "checkFavorites/", checklink)
       .then((response) => response.data)
       .catch((error) => {
         // Gérer l'erreur ici
-        console.log(error.response.data.msg);
+        console.log("ERROR FAVSERVICES: "+error.msg);
         this.msg = error.response.data.msg;
         throw error; // Renvoie l'erreur pour la traiter à l'endroit où elle est appelée
       });

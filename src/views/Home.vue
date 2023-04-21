@@ -1,5 +1,5 @@
 <template>
-  <div id="Home2">
+  <div id="Home">
     <MapList :displayFavorite="displayFavorite"></MapList>
     <Post v-if="admin"></Post>
   </div>

@@ -1,5 +1,5 @@
 <template>
-  <div id="Favoritos">
+  <div id="Favorites">
     <MapList displayFavorite="true"></MapList>
   </div>
 </template>

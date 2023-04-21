@@ -2,7 +2,7 @@
   <div class="backdrop" @click.self="closeModal">
     <div class="modal">
       <img src="../assets/images/login.svg" />
-      <h2>Datos de acceso</h2>
+      <h2>Login details</h2>
 
       <form @submit.prevent="handleSubmit">
         <label>Email:</label>
@@ -18,14 +18,14 @@
         <div v-if="passwordError" class="error">{{ passwordError }}</div>
 
         <div class="submit">
-          <button class="login" @click="login">Iniciar sesión</button>
+          <button class="login" @click="login">Login</button>
         </div>
       </form>
       <button
         style="background-color: transparent; border: 0"
         @click="openSignup"
       >
-        ¿No tienes una cuenta?
+        Don't have an account?
       </button>
     </div>
   </div>
