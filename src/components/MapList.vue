@@ -32,7 +32,6 @@
     </GMapMap>
 
     <div class="column">
-      <h1>Contenu droit</h1>
       <select v-model="filter">
         <option value="">Tout</option>
         <option v-for="region in uniqueRegion" :key="region" :value="region">
@@ -202,6 +201,10 @@ export default {
       }
     },
     admin() {
+      if (this.connectedUser.email === "killianboisseau85@gmail.com") {
+      this.$emit("admin")
+        
+      }
       return this.connectedUser.email === "killianboisseau85@gmail.com";
     },
     uniqueRegion() {
