@@ -48,7 +48,7 @@ export default {
   methods: {
     handleSubmit() {
       axios
-        .post("http://localhost:8000/api/Places", {
+        .post("https://los-turistas-ws.onrender.com/api/Places", {
           Name: this.Name,
           Description: this.Description,
           City: this.City,
