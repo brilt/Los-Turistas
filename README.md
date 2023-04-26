@@ -21,5 +21,5 @@ See [Configuration Reference](https://cli.vuejs.org/config/).
 
 npm run build
 git add dist -f
-git commit -m "Display fav counter"
+git commit -m "Changes languages"
 git subtree push --prefix dist origin gh-pages

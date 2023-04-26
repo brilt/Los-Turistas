@@ -10,19 +10,20 @@
     <input v-model="City" type="text" name="City" placeholder="City" />
     <input v-model="Region" type="text" name="Region" placeholder="Region" />
     <input v-model="Link" type="text" name="Link" placeholder="Link" />
-    <input
-      v-model="Longitud"
-      type="number"
-      step="any"
-      name="Longitud"
-      placeholder="Longitud"
-    />
+    
     <input
       v-model="Latitude"
       type="number"
       name="Latitude"
       step="any"
       placeholder="Latitude"
+    />
+    <input
+      v-model="Longitud"
+      type="number"
+      step="any"
+      name="Longitud"
+      placeholder="Longitud"
     />
     <input v-model="Image" type="text" name="Image" placeholder="Image" />
     <button type="submit">Submit</button>

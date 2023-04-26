@@ -6,12 +6,11 @@
       class="column"
       :options="{
         disableDefaultUi: true,
-        streetViewControl: false
+        streetViewControl: false,
       }"
       style="border: 1px solid black"
     >
       <GMapMarker
-        
         v-for="place in filterList"
         :key="place.Id"
         :position="{ lat: place.Latitude, lng: place.Longitud }"
@@ -55,7 +54,9 @@
                   "
                   style="width: 1em; vertical-align: middle"
                 />
-                <p style="display:inline; font-size: 0.7em;">({{ place.count }})</p>
+                <p style="display: inline; font-size: 0.7em">
+                  ({{ place.count }})
+                </p>
               </picture>
             </h2>
             <p>
@@ -65,11 +66,12 @@
           </div>
         </article>
 
-        <button @click="previousPage">Previous page</button>
-        <button @click="nextPage">Next page</button>
+        <button @click="previousPage" id="prvP">Previous page</button>
+        <button @click="nextPage" id="nxtP">Next page</button>
       </div>
     </div>
   </div>
+  <Post v-if="admin"></Post>
 </template>
 
 <script>
@@ -201,10 +203,6 @@ export default {
       }
     },
     admin() {
-      if (this.connectedUser.email === "killianboisseau85@gmail.com") {
-      this.$emit("admin")
-        
-      }
       return this.connectedUser.email === "killianboisseau85@gmail.com";
     },
     uniqueRegion() {
@@ -255,21 +253,34 @@ export default {
       }
     },
     nextPage() {
+      let listSize = this.filterList.length;
+      console.log(listSize);
+      if (
+        this.filterList.length / this.indexPage > 1 &&
+        this.indexPage + this.displaySize <= this.filterList.length
+      ) {
+        this.indexPage = this.indexPage + this.displaySize;
+        document.getElementById("prvP").disabled = false
+      } else {
+        document.getElementById("nxtP").disabled = true;
+      }
+
       console.log(
         "this.filterList.length / this.indexPage: " +
           this.filterList.length / this.indexPage
       );
-      console.log(" this.displaySize: " + this.displaySize);
-      if (
-        this.filterList.length / this.indexPage > this.displaySize &&
-        this.filterList.length / this.indexPage >= 1
-      ) {
-        this.indexPage = this.indexPage + this.displaySize;
-      }
+      console.log(" this.index: " + this.indexPage);
     },
     previousPage() {
       if (this.indexPage > 1) {
         this.indexPage = this.indexPage - this.displaySize;
+        
+      } else {
+        
+        document.getElementById("prvP").disabled = true
+      }
+      if (document.getElementById("nxtP").disabled == true) {
+        document.getElementById("nxtP").disabled = false;
       }
     },
     resetIndex() {
@@ -289,9 +300,9 @@ export default {
 
           place.isFav = response.isFav;
           if (place.isFav) {
-            place.count ++
+            place.count++;
           } else {
-            place.count --
+            place.count--;
           }
         }
       } catch (error) {

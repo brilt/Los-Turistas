@@ -1,7 +1,7 @@
 <template>
   <div id="Home">
     <MapList :displayFavorite="displayFavorite"></MapList>
-    <Post v-if="admin"></Post>
+    
   </div>
 </template>
 
