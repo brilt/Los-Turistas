@@ -105,7 +105,7 @@ select {
   background: #ff0000;
   border: 0;
   padding: 10px 20px;
-  margin: 2em;
+  margin: 20px;
   color: white;
   border-radius: 10px;
 }
@@ -142,5 +142,15 @@ select {
 .modal h1 {
   border: none;
   padding: 0;
+}
+@media (max-width: 768px) {
+  .login {
+  background: #ff0000;
+  border: 0;
+  padding: 10px 20px;
+  margin: 7px;
+  color: white;
+  border-radius: 10px;
+}
 }
 </style>
