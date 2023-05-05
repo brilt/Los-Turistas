@@ -117,6 +117,25 @@ export default {
         "https://los-turistas-ws.onrender.com/api/places"
       );
       const data = await response.json();
+
+
+      const favCountResponse = await fetch(
+        "https://los-turistas-ws.onrender.com/api/orderFav"
+      )
+        .then((response) => response.json())
+        .then((dt) => {
+          data.forEach((element) => {
+            const matchingElement = dt.find((e) => e.placeId === element.Id);
+            if (matchingElement) {
+              // If a matching element is found in list2, update the properties in list1
+              Object.assign(element, matchingElement);
+            } else {
+              element.count = 0;
+            }
+          });
+        });
+
+
       for (const place of data) {
         try {
           if (typeof this.connectedUser.id === "undefined") {
@@ -143,23 +162,8 @@ export default {
           console.log("Error checking fav: " + error);
         }
       }
-      console.log(data);
 
-      const favCountResponse = await fetch(
-        "https://los-turistas-ws.onrender.com/api/orderFav"
-      )
-        .then((response) => response.json())
-        .then((dt) => {
-          data.forEach((element) => {
-            const matchingElement = dt.find((e) => e.placeId === element.Id);
-            if (matchingElement) {
-              // If a matching element is found in list2, update the properties in list1
-              Object.assign(element, matchingElement);
-            } else {
-              element.count = 0;
-            }
-          });
-        });
+      
 
       this.places = data;
     } catch (err) {
@@ -172,6 +176,7 @@ export default {
       let region = this.filter;
       this.resetIndex();
       if (this.displayFavorite) {
+        console.log("display favorite");
         return this.favList.filter(function (place) {
           let filtered = true;
           if (region && region.length > 0) {
@@ -180,17 +185,19 @@ export default {
           return filtered;
         });
       } else {
-        let filteredList = this.places.filter(function (place) {
-          let filtered = true;
-          if (region && region.length > 0) {
-            if (region !== "fav") {
+        if (region !== "fav") {
+          return this.places.filter(function (place) {
+            let filtered = true;
+            if (region && region.length > 0) {
               filtered = place.Region === region;
-            } else {
-              filtered = true; // no filtering by "fav" region
             }
-          }
-          return filtered;
-        });
+            return filtered;
+          });
+        } else {
+          return this.places.sort(function (a, b) {
+            return b.count - a.count;
+          });
+        }
 
         // sorting by the "count" parameter if no region is specified
         if (region == "fav") {
@@ -225,6 +232,7 @@ export default {
         if (typeof this.connectedUser.id === "undefined") {
         } else {
           const response = FavServices.checkFav(checklink);
+
           if (response.favorite) {
             return true;
           } else {
@@ -237,6 +245,7 @@ export default {
     },
     shortList() {
       let id = this.openedMarkerID;
+      console.log("length: " + this.filterList.length);
       if (this.openedMarkerID == null) {
         return this.filterList.slice(
           this.indexPage - 1,
@@ -245,7 +254,7 @@ export default {
       } else {
         return this.places.filter(function (place) {
           let filtered = true;
-          console.log(id);
+
           filtered = place.Id == id;
 
           return filtered;
@@ -254,30 +263,21 @@ export default {
     },
     nextPage() {
       let listSize = this.filterList.length;
-      console.log(listSize);
       if (
         this.filterList.length / this.indexPage > 1 &&
         this.indexPage + this.displaySize <= this.filterList.length
       ) {
         this.indexPage = this.indexPage + this.displaySize;
-        document.getElementById("prvP").disabled = false
+        document.getElementById("prvP").disabled = false;
       } else {
         document.getElementById("nxtP").disabled = true;
       }
-
-      console.log(
-        "this.filterList.length / this.indexPage: " +
-          this.filterList.length / this.indexPage
-      );
-      console.log(" this.index: " + this.indexPage);
     },
     previousPage() {
       if (this.indexPage > 1) {
         this.indexPage = this.indexPage - this.displaySize;
-        
       } else {
-        
-        document.getElementById("prvP").disabled = true
+        document.getElementById("prvP").disabled = true;
       }
       if (document.getElementById("nxtP").disabled == true) {
         document.getElementById("nxtP").disabled = false;
@@ -311,8 +311,13 @@ export default {
     },
     openMarker(id) {
       this.openedMarkerID = id;
-      console.log(this.openedMarkerID);
     },
   },
 };
 </script>
+
+<style>
+.vue-map{
+  min-height: 300px;
+}
+</style>

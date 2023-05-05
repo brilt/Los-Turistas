@@ -1,6 +1,6 @@
 <template>
   <div id="Favorites">
-    <MapList displayFavorite="true"></MapList>
+    <MapList :displayFavorite=displayFavorite></MapList>
   </div>
 </template>
 
@@ -11,10 +11,10 @@ import MapList from "@/components/MapList.vue";
 
 
 export default {
-  name: "Home",
+  name: "Favorite",
   data() {
     return {
-      displayFavorite: true
+      displayFavorite: true,
     }
   },
   components: {

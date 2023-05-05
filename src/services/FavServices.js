@@ -21,7 +21,7 @@ export default {
       .then((response) => response.data)
       .catch((error) => {
         // Gérer l'erreur ici
-        console.log("ERROR FAVSERVICES: "+error.msg);
+        console.log("ERROR FAVSERVICES: "+error.response.data.msg);
         this.msg = error.response.data.msg;
         throw error; // Renvoie l'erreur pour la traiter à l'endroit où elle est appelée
       });

@@ -8,6 +8,9 @@
       <div class="link">
         <router-link to="/favorites">Favorites</router-link>
       </div>
+      <div class="link">
+        <router-link to="/contact">Contact Us</router-link>
+      </div>
     </div>
 
     <button v-if="isLoggedIn" class="login" @click="logOut">
