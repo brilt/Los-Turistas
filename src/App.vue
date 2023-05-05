@@ -1,13 +1,9 @@
 <template>
   <nav>
     <div class="links">
-      <img id="logo" src="./assets/images/los-turistas-logo.png" alt="" />
-      <div class="link">
-        <router-link to="/">Home</router-link>
-      </div>
-      <div class="link">
-        <router-link to="/favorites">Favorites</router-link>
-      </div>
+      <img id="logo" src="./assets/images/los-turistas-logo.png" alt="logo Los Turistas" />
+      <router-link to="/" >Home</router-link>
+      <router-link to="/favorites" >Favorites</router-link>
     </div>
 
     <button v-if="isLoggedIn" class="login" @click="logOut">
@@ -15,18 +11,8 @@
     </button>
     <button v-else class="login" @click="toggleLogIn">Login</button>
   </nav>
-  <LogIn
-    @close="toggleLogIn"
-    @openSignup="toggleSignup"
-    v-if="showLogIn"
-    style="z-index: 1000"
-  />
-  <SignUp
-    @close="toggleSignup"
-    @openLogIn="toggleLogIn"
-    v-if="showSignup"
-    style="z-index: 1000"
-  />
+  <LogIn @close="toggleLogIn" @openSignup="toggleSignup" v-if="showLogIn" style="z-index: 1000" />
+  <SignUp @close="toggleSignup" @openLogIn="toggleLogIn" v-if="showSignup" style="z-index: 1000" />
 
   <router-view />
 </template>
@@ -96,7 +82,7 @@ nav {
   display: flex;
   justify-content: space-between;
   background: #555151;
-  padding: 0 20px;
+  padding: 10px 20px;
 }
 
 body {
@@ -118,7 +104,7 @@ nav a.router-link-exact-active {
 }
 
 #logo {
-  width: 15%;
+  width: 20%;
 
 }
 
@@ -128,19 +114,15 @@ nav a.router-link-exact-active {
   justify-content: space-around;
 }
 
-.link {
-  height: 50px;
-  width: 50px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-
 /* Styles pour le footer */
 footer {
   background-color: #333;
   color: white;
   padding: 10px;
   text-align: center;
+}
+
+@media (max-width: 768px) {
+
 }
 </style>

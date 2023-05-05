@@ -1,28 +1,12 @@
 <template>
   <div class="container">
-    <GMapMap
-      :center="center"
-      :zoom="5"
-      class="column"
-      :options="{
+    <GMapMap :center="center" :zoom="5" class="column" :options="{
         disableDefaultUi: true,
         streetViewControl: false
-      }"
-      style="border: 1px solid black"
-    >
-      <GMapMarker
-        
-        v-for="place in filterList"
-        :key="place.Id"
-        :position="{ lat: place.Latitude, lng: place.Longitud }"
-        :clickable="true"
-        @click="openMarker(place.Id)"
-      >
-        <GMapInfoWindow
-          :closeclick="true"
-          @closeclick="openMarker(null)"
-          :opened="openedMarkerID === place.Id"
-        >
+      }" style="border: 1px solid black; min-height: 300px ;">
+      <GMapMarker v-for="place in filterList" :key="place.Id" :position="{ lat: place.Latitude, lng: place.Longitud }"
+        :clickable="true" @click="openMarker(place.Id)">
+        <GMapInfoWindow :closeclick="true" @closeclick="openMarker(null)" :opened="openedMarkerID === place.Id">
           <h2>{{ place.Name }}</h2>
           <p>
             {{ place.Description }}
@@ -41,28 +25,29 @@
       </select>
       <div class="list">
         <article v-for="place in shortList()" :key="place.Id" class="card">
-          <picture style="position: absolute; top: 0; right: 0; margin: 15px;">
-                <img @click="toggleFavo(place)" :src="
-                  place.isFav
-                    ? 'https://cdn-icons-png.flaticon.com/512/833/833472.png'
-                    : 'https://cdn-icons-png.flaticon.com/512/1077/1077035.png'
+          <div><img :src="place.Image" /></div>
+          <div>
+            <picture>
+              <img @click="toggleFavo(place)" :src="place.isFav
+                  ? 'https://cdn-icons-png.flaticon.com/512/833/833472.png'
+                  : 'https://cdn-icons-png.flaticon.com/512/1077/1077035.png'
                 " style="width: 1.5em; " />
-                <p style="display:inline; font-size: 1em;">({{ place.count }})</p>
-              </picture>
-          <img :src="place.Image" style="height: 10rem; width: auto" />
-          <div class="description">
-            <h2>
-              {{ place.Name }}
-            </h2>
-            <p>
-              {{ place.Description }}
-            </p>
-            <a :href="place.Link" target="_blank">Read all about it</a>
+              <p style="display:inline; font-size: 1em;">({{ place.count }})</p>
+            </picture>
+            <div class="description">
+              <h2>
+                {{ place.Name }}
+              </h2>
+              <p>
+                {{ place.Description }}
+              </p>
+              <a :href="place.Link" target="_blank">Read all about it</a>
+            </div>
           </div>
         </article>
 
-        <button @click="previousPage">Previous page</button>
-        <button @click="nextPage">Next page</button>
+        <button class="button" @click="previousPage">Previous page</button>
+        <button class="button" @click="nextPage">Next page</button>
       </div>
     </div>
   </div>
@@ -281,9 +266,9 @@ export default {
 
           place.isFav = response.isFav;
           if (place.isFav) {
-            place.count ++
+            place.count++
           } else {
-            place.count --
+            place.count--
           }
         }
       } catch (error) {
@@ -306,12 +291,12 @@ export default {
   border: 1px solid #ccc;
   border-radius: 5px;
   max-width: 100%;
-  position:relative;
+  position: relative;
 }
-.card-container {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: stretch;
+
+.card>img {
+  height: 10rem;
+  width: auto;
 }
 
 
@@ -333,13 +318,82 @@ img {
   max-width: 90%;
   margin: auto;
   padding: 1%;
-} 
+}
 
 .column {
   flex: 1;
   height: auto;
   margin: 5px;
   padding: 10px;
-
 }
+
+
+
+.button {
+  background-color: #e0e0e0;
+  ;
+  border: none;
+  color: #333;
+  padding: 7px 15px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 100%;
+  margin: 4px 10px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.button:hover {
+  background-color: #d3d1d1;
+}
+
+picture {
+  position: absolute;
+  top: 0;
+  right: 0;
+  margin: 15px;
+}
+
+@media screen and (max-width: 767px) {
+  .container {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .column {
+    width: 100%;
+  }
+
+  .card>img {
+    height: 5rem;
+    width: auto;
+
+  }
+  picture {
+  position: relative;
+  top: 0;
+  right: 0;
+  margin: 15px;
+}
+.card {
+  display: flex;
+flex-direction: column;
+  grid-template-rows: 1fr 2fr; /* ou toute autre hauteur souhaitée pour chaque ligne */
+  padding: 0px;
+  margin: 5px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  max-width: 100%;
+  position: relative;
+}
+.card div:first-child {
+order: 1;
+}
+
+.card div:last-child {
+order: 2;
+}
+}
+
 </style>

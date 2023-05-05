@@ -5,7 +5,7 @@ const url = "https://los-turistas-ws.onrender.com/api/";
 export default {
   toggleFav(link) {
     return axios
-      .post(url + "favoris/", link)
+      .post(url + "favorites/", link)
       .then((response) => {
         return response.data;
       })
