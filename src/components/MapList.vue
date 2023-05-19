@@ -1,9 +1,6 @@
 <template>
   <div class="container">
-    <GMapMap :center="center" :zoom="5" class="column" :options="{
-        disableDefaultUi: true,
-        streetViewControl: false
-      }" style="border: 1px solid black; min-height: 300px ;">
+    <GMapMap :center="center" :zoom="5" class="column map">
       <GMapMarker v-for="place in filterList" :key="place.Id" :position="{ lat: place.Latitude, lng: place.Longitud }"
         :clickable="true" @click="openMarker(place.Id)">
         <GMapInfoWindow :closeclick="true" @closeclick="openMarker(null)" :opened="openedMarkerID === place.Id">
@@ -29,8 +26,8 @@
           <div>
             <picture>
               <img @click="toggleFavo(place)" :src="place.isFav
-                  ? 'https://cdn-icons-png.flaticon.com/512/833/833472.png'
-                  : 'https://cdn-icons-png.flaticon.com/512/1077/1077035.png'
+                ? 'https://cdn-icons-png.flaticon.com/512/833/833472.png'
+                : 'https://cdn-icons-png.flaticon.com/512/1077/1077035.png'
                 " style="width: 1.5em; " />
               <p style="display:inline; font-size: 1em;">({{ place.count }})</p>
             </picture>
@@ -143,7 +140,7 @@ export default {
         }
       }
 
-      
+
 
       this.places = data;
     } catch (err) {
@@ -322,6 +319,10 @@ img {
   height: auto;
 }
 
+.map {
+  min-height: 700px;
+  border: 1px solid black;
+}
 /* Styles pour les colonnes */
 .container {
   display: grid;
@@ -342,9 +343,8 @@ img {
 
 
 
-.button {
+button {
   background-color: #e0e0e0;
-  ;
   border: none;
   color: #333;
   padding: 7px 15px;
@@ -357,7 +357,7 @@ img {
   transition: background-color 0.3s ease;
 }
 
-.button:hover {
+button:hover {
   background-color: #d3d1d1;
 }
 
@@ -383,30 +383,38 @@ picture {
     width: auto;
 
   }
+
   picture {
-  position: relative;
-  top: 0;
-  right: 0;
-  margin: 15px;
-}
-.card {
-  display: flex;
-flex-direction: column;
-  grid-template-rows: 1fr 2fr; /* ou toute autre hauteur souhaitée pour chaque ligne */
-  padding: 0px;
-  margin: 5px;
-  border: 1px solid #ccc;
-  border-radius: 5px;
-  max-width: 100%;
-  position: relative;
-}
-.card div:first-child {
-order: 1;
-}
+    position: relative;
+    top: 0;
+    right: 0;
+    margin: 15px;
+  }
 
-.card div:last-child {
-order: 2;
-}
-}
+  .card {
+    display: flex;
+    flex-direction: column;
+    grid-template-rows: 1fr 2fr;
+    padding: 0px;
+    margin: 5px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    max-width: 100%;
+    position: relative;
+  }
 
+  .card div:first-child {
+    order: 1;
+  }
+
+  .card div:last-child {
+    order: 2;
+  }
+
+  .map {
+    min-height: 300px;
+    border: 1px solid black;
+  }
+
+}
 </style>
