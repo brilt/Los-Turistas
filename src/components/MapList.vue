@@ -1,12 +1,27 @@
 <template>
   <div class="container">
-    <GMapMap :center="center" :zoom="5" class="column" :options="{
+    <GMapMap
+      :center="center"
+      :zoom="5"
+      class="column"
+      :options="{
         disableDefaultUi: true,
-        streetViewControl: false
-      }" style="border: 1px solid black; min-height: 300px ;">
-      <GMapMarker v-for="place in filterList" :key="place.Id" :position="{ lat: place.Latitude, lng: place.Longitud }"
-        :clickable="true" @click="openMarker(place.Id)">
-        <GMapInfoWindow :closeclick="true" @closeclick="openMarker(null)" :opened="openedMarkerID === place.Id">
+        streetViewControl: true,
+      }"
+      style="border: 1px solid black; min-height: 300px"
+    >
+      <GMapMarker
+        v-for="place in filterList"
+        :key="place.Id"
+        :position="{ lat: place.Latitude, lng: place.Longitud }"
+        :clickable="true"
+        @click="openMarker(place.Id)"
+      >
+        <GMapInfoWindow
+          :closeclick="true"
+          @closeclick="openMarker(null)"
+          :opened="openedMarkerID === place.Id"
+        >
           <h2>{{ place.Name }}</h2>
           <p>
             {{ place.Description }}
@@ -28,11 +43,16 @@
           <div><img :src="place.Image" /></div>
           <div>
             <picture>
-              <img @click="toggleFavo(place)" :src="place.isFav
-                  ? 'https://cdn-icons-png.flaticon.com/512/833/833472.png'
-                  : 'https://cdn-icons-png.flaticon.com/512/1077/1077035.png'
-                " style="width: 1.5em; " />
-              <p style="display:inline; font-size: 1em;">({{ place.count }})</p>
+              <img
+                @click="toggleFavo(place)"
+                :src="
+                  place.isFav
+                    ? 'https://cdn-icons-png.flaticon.com/512/833/833472.png'
+                    : 'https://cdn-icons-png.flaticon.com/512/1077/1077035.png'
+                "
+                style="width: 1.5em"
+              />
+              <p style="display: inline; font-size: 1em">({{ place.count }})</p>
             </picture>
             <div class="description">
               <h2>
@@ -98,7 +118,6 @@ export default {
       );
       const data = await response.json();
 
-
       const favCountResponse = await fetch(
         "https://los-turistas-ws.onrender.com/api/orderFav"
       )
@@ -114,7 +133,6 @@ export default {
             }
           });
         });
-
 
       for (const place of data) {
         try {
@@ -142,8 +160,6 @@ export default {
           console.log("Error checking fav: " + error);
         }
       }
-
-      
 
       this.places = data;
     } catch (err) {
@@ -307,11 +323,10 @@ export default {
   position: relative;
 }
 
-.card>img {
+.card > img {
   height: 10rem;
   width: auto;
 }
-
 
 .description {
   flex: 1;
@@ -340,11 +355,8 @@ img {
   padding: 10px;
 }
 
-
-
-.button {
+button {
   background-color: #e0e0e0;
-  ;
   border: none;
   color: #333;
   padding: 7px 15px;
@@ -357,7 +369,7 @@ img {
   transition: background-color 0.3s ease;
 }
 
-.button:hover {
+button:hover {
   background-color: #d3d1d1;
 }
 
@@ -378,35 +390,33 @@ picture {
     width: 100%;
   }
 
-  .card>img {
+  .card > img {
     height: 5rem;
     width: auto;
-
   }
   picture {
-  position: relative;
-  top: 0;
-  right: 0;
-  margin: 15px;
-}
-.card {
-  display: flex;
-flex-direction: column;
-  grid-template-rows: 1fr 2fr; /* ou toute autre hauteur souhaitée pour chaque ligne */
-  padding: 0px;
-  margin: 5px;
-  border: 1px solid #ccc;
-  border-radius: 5px;
-  max-width: 100%;
-  position: relative;
-}
-.card div:first-child {
-order: 1;
-}
+    position: relative;
+    top: 0;
+    right: 0;
+    margin: 15px;
+  }
+  .card {
+    display: flex;
+    flex-direction: column;
+    grid-template-rows: 1fr 2fr; /* ou toute autre hauteur souhaitée pour chaque ligne */
+    padding: 0px;
+    margin: 5px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    max-width: 100%;
+    position: relative;
+  }
+  .card div:first-child {
+    order: 1;
+  }
 
-.card div:last-child {
-order: 2;
+  .card div:last-child {
+    order: 2;
+  }
 }
-}
-
 </style>

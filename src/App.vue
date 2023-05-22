@@ -3,6 +3,7 @@
     <div class="links">
       <img id="logo" src="./assets/images/los-turistas-logo.png" alt="logo Los Turistas" />
       <router-link to="/" >Home</router-link>
+      <router-link to="/discover" >Discover</router-link>
       <router-link to="/favorites" >Favorites</router-link>
     </div>
 
