@@ -1,6 +1,6 @@
 <template>
   <div class="container">
-    <GMapMap :center="center" :zoom="5" class="column map">
+    <GMapMap :center="center" :zoom="5" :class="{ 'map-pc': !isMobile, 'map-mobile': isMobile }" :style="{ minHeight: '500px' }">
       <GMapMarker v-for="place in filterList" :key="place.Id" :position="{ lat: place.Latitude, lng: place.Longitud }"
         :clickable="true" @click="openMarker(place.Id)">
         <GMapInfoWindow :closeclick="true" @closeclick="openMarker(null)" :opened="openedMarkerID === place.Id">
@@ -24,17 +24,18 @@
         <article v-for="place in shortList()" :key="place.Id" class="card">
           <div><img :src="place.Image" /></div>
           <div>
-            <picture>
-              <img @click="toggleFavo(place)" :src="place.isFav
-                ? 'https://cdn-icons-png.flaticon.com/512/833/833472.png'
-                : 'https://cdn-icons-png.flaticon.com/512/1077/1077035.png'
-                " style="width: 1.5em; " />
-              <p style="display:inline; font-size: 1em;">({{ place.count }})</p>
-            </picture>
+
             <div class="description">
-              <h2>
-                {{ place.Name }}
-              </h2>
+              <div class="desc_title">
+                <h2> {{ place.Name }} </h2>
+                <picture>
+                  <img @click="toggleFavo(place)" :src="place.isFav
+                    ? 'https://cdn-icons-png.flaticon.com/512/833/833472.png'
+                    : 'https://cdn-icons-png.flaticon.com/512/1077/1077035.png'
+                    " style="width: 1.5em; " />
+                  <p style="display:inline; font-size: 1em;">({{ place.count }})</p>
+                </picture>
+              </div>
               <p>
                 {{ place.Description }}
               </p>
@@ -304,6 +305,11 @@ export default {
   position: relative;
 }
 
+.desc_title {
+  display: grid;
+  grid-template-columns: 4fr 1fr;
+}
+
 .card>img {
   height: 10rem;
   width: auto;
@@ -317,12 +323,10 @@ export default {
 img {
   width: 100%;
   height: auto;
+  vertical-align: middle;
 }
 
-.map {
-  min-height: 700px;
-  border: 1px solid black;
-}
+
 /* Styles pour les colonnes */
 .container {
   display: grid;
@@ -341,7 +345,13 @@ img {
   padding: 10px;
 }
 
+.map-pc {
+  min-height: 500px;
+}
 
+.map-mobile {
+  min-height: 300px;
+}
 
 button {
   background-color: #e0e0e0;
@@ -374,9 +384,6 @@ picture {
     flex-direction: column;
   }
 
-  .column {
-    width: 100%;
-  }
 
   .card>img {
     height: 5rem;
@@ -410,11 +417,5 @@ picture {
   .card div:last-child {
     order: 2;
   }
-
-  .map {
-    min-height: 300px;
-    border: 1px solid black;
-  }
-
 }
 </style>
