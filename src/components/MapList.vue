@@ -22,7 +22,7 @@
       </select>
       <div class="list">
         <article v-for="place in shortList()" :key="place.Id" class="card">
-          <div><img :src="place.Image" /></div>
+          <div id="img-container"><img :src="place.Image" /></div>
           <div>
 
             <div class="description">
@@ -373,6 +373,10 @@ picture {
   top: 0;
   right: 0;
   margin: 15px;
+}
+
+#img-container{
+  margin: auto;
 }
 
 @media screen and (max-width: 767px) {
