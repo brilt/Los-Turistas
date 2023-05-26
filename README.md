@@ -21,5 +21,5 @@ See [Configuration Reference](https://cli.vuejs.org/config/).
 
 npm run build
 git add dist -f
-git commit -m "Changes languages"
+git commit -m "lets go"
 git subtree push --prefix dist origin gh-pages

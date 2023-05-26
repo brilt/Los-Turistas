@@ -14,7 +14,7 @@ createApp(App)
   .use(router)
   .use(VueGoogleMaps, {
     load: {
-      key: "AIzaSyApRohqBChX1TQQNn8-kulrwVSWtKuQnIc",
+      key: "key",
     },
   })
   .component('Post',Post)
