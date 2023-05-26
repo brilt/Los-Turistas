@@ -1,27 +1,9 @@
 <template>
   <div class="container">
-    <GMapMap
-      :center="center"
-      :zoom="5"
-      class="column"
-      :options="{
-        disableDefaultUi: true,
-        streetViewControl: true,
-      }"
-      style="border: 1px solid black; min-height: 300px"
-    >
-      <GMapMarker
-        v-for="place in filterList"
-        :key="place.Id"
-        :position="{ lat: place.Latitude, lng: place.Longitud }"
-        :clickable="true"
-        @click="openMarker(place.Id)"
-      >
-        <GMapInfoWindow
-          :closeclick="true"
-          @closeclick="openMarker(null)"
-          :opened="openedMarkerID === place.Id"
-        >
+    <GMapMap :center="center" :zoom="5" :class="{ 'map-pc': !isMobile, 'map-mobile': isMobile }" :style="{ minHeight: '500px' }">
+      <GMapMarker v-for="place in filterList" :key="place.Id" :position="{ lat: place.Latitude, lng: place.Longitud }"
+        :clickable="true" @click="openMarker(place.Id)">
+        <GMapInfoWindow :closeclick="true" @closeclick="openMarker(null)" :opened="openedMarkerID === place.Id">
           <h2>{{ place.Name }}</h2>
           <p>
             {{ place.Description }}
@@ -42,22 +24,18 @@
         <article v-for="place in shortList()" :key="place.Id" class="card">
           <div><img :src="place.Image" /></div>
           <div>
-            <picture>
-              <img
-                @click="toggleFavo(place)"
-                :src="
-                  place.isFav
+
+            <div class="description">
+              <div class="desc_title">
+                <h2> {{ place.Name }} </h2>
+                <picture>
+                  <img @click="toggleFavo(place)" :src="place.isFav
                     ? 'https://cdn-icons-png.flaticon.com/512/833/833472.png'
                     : 'https://cdn-icons-png.flaticon.com/512/1077/1077035.png'
-                "
-                style="width: 1.5em"
-              />
-              <p style="display: inline; font-size: 1em">({{ place.count }})</p>
-            </picture>
-            <div class="description">
-              <h2>
-                {{ place.Name }}
-              </h2>
+                    " style="width: 1.5em; " />
+                  <p style="display:inline; font-size: 1em;">({{ place.count }})</p>
+                </picture>
+              </div>
               <p>
                 {{ place.Description }}
               </p>
@@ -160,6 +138,8 @@ export default {
           console.log("Error checking fav: " + error);
         }
       }
+
+
 
       this.places = data;
     } catch (err) {
@@ -323,7 +303,12 @@ export default {
   position: relative;
 }
 
-.card > img {
+.desc_title {
+  display: grid;
+  grid-template-columns: 4fr 1fr;
+}
+
+.card>img {
   height: 10rem;
   width: auto;
 }
@@ -335,7 +320,9 @@ export default {
 img {
   width: 100%;
   height: auto;
+  vertical-align: middle;
 }
+
 
 /* Styles pour les colonnes */
 .container {
@@ -353,6 +340,14 @@ img {
   height: auto;
   margin: 5px;
   padding: 10px;
+}
+
+.map-pc {
+  min-height: 500px;
+}
+
+.map-mobile {
+  min-height: 300px;
 }
 
 button {
@@ -386,24 +381,23 @@ picture {
     flex-direction: column;
   }
 
-  .column {
-    width: 100%;
-  }
 
   .card > img {
     height: 5rem;
     width: auto;
   }
+
   picture {
     position: relative;
     top: 0;
     right: 0;
     margin: 15px;
   }
+
   .card {
     display: flex;
     flex-direction: column;
-    grid-template-rows: 1fr 2fr; /* ou toute autre hauteur souhaitée pour chaque ligne */
+    grid-template-rows: 1fr 2fr;
     padding: 0px;
     margin: 5px;
     border: 1px solid #ccc;
@@ -411,6 +405,7 @@ picture {
     max-width: 100%;
     position: relative;
   }
+
   .card div:first-child {
     order: 1;
   }
